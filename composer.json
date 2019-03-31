@@ -1,9 +1,9 @@
 {
-  "name": "parable-php/framework",
+  "name": "parable-php/parable",
   "type": "library",
-  "description": "Parable Rights is a simple bitmask-based rights system",
-  "keywords": ["library", "micro", "rights", "acl", "bitmask", "parable"],
-  "homepage": "https://github.com/parable-php/framework",
+  "description": "Parable PHP Framework is a minimalist framework",
+  "keywords": ["framework", "micro", "prototyping", "minimal", "parable"],
+  "homepage": "https://github.com/parable-php/parable",
   "license": "MIT",
   "authors": [
     {

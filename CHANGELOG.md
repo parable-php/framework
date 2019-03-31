@@ -1,6 +1,3 @@
-# Parable Rights
+# Parable PHP Framework
 
-## 0.1.0
-
-_Changes_
-- First release.
+_None as of yet._
