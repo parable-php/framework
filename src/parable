@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+use Parable\Di\Container;
+use Parable\Framework\ConsoleApplication;
+
+require_once realpath(__DIR__ . "/../../../autoload.php");
+
+$container = new Container();
+
+$application = $container->get(ConsoleApplication::class);
+$application->run();

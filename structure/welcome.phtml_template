@@ -1,0 +1,102 @@
+<?php /** @var \Parable\Framework\Http\Template $this */ ?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Welcome to Parable <?=\Parable\Framework\Application::VERSION;?></title>
+
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:100" rel="stylesheet" />
+        <style>
+            * {
+                font-family: "Montserrat", sans-serif;
+                font-weight: 100;
+                font-size: 17px;
+                color: #fff;
+
+                animation: 1s fade-in forwards;
+            }
+            @keyframes fade-in {
+                from {opacity: 0;}
+                to   {opacity: 1;}
+            }
+            html, body {
+                margin: 0;
+            }
+            h2 {
+                font-weight: bold;
+                font-size: 1.2rem;
+            }
+            body {
+                background-color: #4533b7;
+                overflow: hidden;
+            }
+
+            a {
+                transition: all 0.1s ease-out;
+                color: #a797d6;
+                text-decoration: none;
+                width: 100px;
+            }
+            a:hover {
+                background: #a797d6;
+                color: #2915a4;
+            }
+
+            section {
+                width: 360px;
+                margin: auto;
+                line-height: 1.65rem;
+            }
+
+            section header {
+                text-align: center;
+                margin-top: 12vh;
+                margin-bottom: 8vh;
+            }
+            section header img {
+                width: 128px;
+            }
+            section h2 {
+                margin-bottom: 2rem;
+            }
+
+            section code {
+                box-sizing: border-box;
+                font-family: monospace;
+                font-size: 0.8rem;
+                background-color: #a797d6;
+                color: #555;
+                padding: 0.35rem 0.45rem;
+                border-radius: 0.25rem;
+            }
+        </style>
+    </head>
+    <body>
+
+        <section>
+
+            <header>
+                <img src="https://devvoh.com/parable-logo-512.png">
+            </header>
+
+            <article>
+                <h2>Hey there! 👋</h2>
+                <p>
+                    Parable <?=\Parable\Framework\Application::VERSION;?> is ready for you,
+                    and you can start building here:
+                </p>
+                <p>
+                    <code>./###SOURCE_DIRECTORY###/Boot.php => \###ROOT_NAMESPACE###\Boot</code>
+                </p>
+                <p>
+                    For documentation, check the <a href="https://github.com/parable-php">GitHub projects</a>,
+                    where you can also create issues for anything you notice.
+                </p>
+                <p>
+                    Now, time to go build something awesome! 💪
+                </p>
+            </article>
+
+        </section>
+
+    </body>
+</html>

@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^(.*)$ ###PUBLIC_DIRECTORY###/$1 [QSA,L]

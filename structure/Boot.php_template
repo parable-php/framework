@@ -1,0 +1,19 @@
+<?php
+
+namespace ###ROOT_NAMESPACE###;
+
+use Parable\Framework\Config;
+use Parable\Framework\Plugins\HttpPluginInterface;
+use Parable\Routing\Route;
+use Parable\Routing\Router;
+
+class Boot implements HttpPluginInterface
+{
+    public function configure(Config $config, Router $router): void
+    {
+        // Set up your config and routing here and Parable handles the rest.
+        $router->addRoute(new Route(
+            ['GET'], 'welcome', '/', function() {}, ['template' => '###SOURCE_DIRECTORY###/welcome.phtml']
+        ));
+    }
+}

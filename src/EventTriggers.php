@@ -1,0 +1,38 @@
+<?php declare(strict_types=1);
+
+namespace Parable\Framework;
+
+class EventTriggers
+{
+    /**
+     * Application triggers
+     */
+    public const APPLICATION_BOOT_BEFORE = 'parable_boot_before';
+    public const APPLICATION_BOOT_AFTER = 'parable_boot_after';
+    public const APPLICATION_ROUTE_FOUND = 'parable_route_found';
+    public const APPLICATION_ROUTE_NOT_FOUND = 'parable_route_not_found';
+    public const APPLICATION_LOAD_CONFIG_BEFORE = 'parable_load_config_before';
+    public const APPLICATION_LOAD_CONFIG_AFTER = 'parable_load_config_after';
+    public const APPLICATION_INIT_DATABASE_BEFORE = 'parable_init_database_before';
+    public const APPLICATION_INIT_DATABASE_AFTER = 'parable_init_database_after';
+    public const APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE = 'parable_set_default_timezone_before';
+    public const APPLICATION_SET_DEFAULT_TIMEZONE_AFTER = 'parable_set_default_timezone_after';
+    public const APPLICATION_RESPONSE_SEND_BEFORE = 'parable_response_send_before';
+    public const APPLICATION_RESPONSE_SEND_AFTER = 'parable_response_send_after';
+    public const APPLICATION_ROUTE_MATCH_BEFORE = 'parable_route_match_before';
+    public const APPLICATION_ROUTE_MATCH_AFTER = 'parable_route_match_after';
+    public const APPLICATION_SESSION_START_BEFORE = 'parable_session_start_before';
+    public const APPLICATION_SESSION_START_AFTER = 'parable_session_start_after';
+    public const APPLICATION_PLUGINS_START_BEFORE_BOOT_BEFORE = 'parable_plugins_start_before_boot_before';
+    public const APPLICATION_PLUGINS_START_BEFORE_BOOT_AFTER = 'parable_plugins_start_before_boot_after';
+    public const APPLICATION_PLUGINS_START_AFTER_BOOT_BEFORE = 'parable_plugins_start_after_boot_before';
+    public const APPLICATION_PLUGINS_START_AFTER_BOOT_AFTER = 'parable_plugins_start_after_boot_after';
+
+    /**
+     * Route dispatcher triggers
+     */
+    public const ROUTE_DISPATCHER_DISPATCH_BEFORE = 'parable_route_dispatch_before';
+    public const ROUTE_DISPATCHER_DISPATCH_AFTER = 'parable_route_dispatch_after';
+    public const ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE = 'parable_route_dispatch_template_before';
+    public const ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER = 'parable_route_dispatch_template_after';
+}
