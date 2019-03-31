@@ -9,16 +9,16 @@ class EventTriggers
      */
     public const APPLICATION_BOOT_BEFORE = 'parable_boot_before';
     public const APPLICATION_BOOT_AFTER = 'parable_boot_after';
-    public const APPLICATION_ROUTE_FOUND = 'parable_route_found';
-    public const APPLICATION_ROUTE_NOT_FOUND = 'parable_route_not_found';
+    public const APPLICATION_ROUTE_MATCH_FOUND = 'parable_route_match_found';
+    public const APPLICATION_ROUTE_MATCH_NOT_FOUND = 'parable_route_match_not_found';
     public const APPLICATION_LOAD_CONFIG_BEFORE = 'parable_load_config_before';
     public const APPLICATION_LOAD_CONFIG_AFTER = 'parable_load_config_after';
     public const APPLICATION_INIT_DATABASE_BEFORE = 'parable_init_database_before';
     public const APPLICATION_INIT_DATABASE_AFTER = 'parable_init_database_after';
     public const APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE = 'parable_set_default_timezone_before';
     public const APPLICATION_SET_DEFAULT_TIMEZONE_AFTER = 'parable_set_default_timezone_after';
-    public const APPLICATION_RESPONSE_SEND_BEFORE = 'parable_response_send_before';
-    public const APPLICATION_RESPONSE_SEND_AFTER = 'parable_response_send_after';
+    public const APPLICATION_RESPONSE_DISPATCH_BEFORE = 'parable_response_dispatch_before';
+    public const APPLICATION_RESPONSE_DISPATCH_AFTER = 'parable_response_dispatch_after';
     public const APPLICATION_ROUTE_MATCH_BEFORE = 'parable_route_match_before';
     public const APPLICATION_ROUTE_MATCH_AFTER = 'parable_route_match_after';
     public const APPLICATION_SESSION_START_BEFORE = 'parable_session_start_before';

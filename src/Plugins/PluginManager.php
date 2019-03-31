@@ -18,12 +18,12 @@ class PluginManager
     ];
 
     /**
-     * @var string[][]|HttpPluginInterface[][]|CliPluginInterface[][]
+     * @var string[][]|HttpPluginInterface[][]|CliPluginInterface[][]|GenericPluginInterface[][]
      */
     protected static $pluginClassNames = [];
 
     /**
-     * @param string|HttpPluginInterface|CliPluginInterface $pluginClassName
+     * @param string|HttpPluginInterface|CliPluginInterface|GenericPluginInterface $pluginClassName
      */
     public static function addPlugin(string $pluginClassName, string $timeSlot): void
     {

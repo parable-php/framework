@@ -11,6 +11,7 @@ use Parable\GetSet\GetCollection;
 use Parable\Http\RequestFactory;
 use Parable\Http\Response;
 use Parable\Http\ResponseDispatcher;
+use Parable\Http\Request;
 use Parable\Routing\Route;
 use Parable\Routing\Router;
 
@@ -70,6 +71,11 @@ class Application
      * @var Tools
      */
     protected $tools;
+
+    /**
+     * @var Request
+     */
+    protected $request;
 
     /**
      * @var bool
@@ -132,7 +138,7 @@ class Application
         $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_BEFORE, $this);
 
         if ($this->hasBooted) {
-            throw new \Parable\Framework\Exception('App has already booted.');
+            throw new Exception('App has already booted.');
         }
 
         $this->startPluginsBeforeBoot();
@@ -155,9 +161,9 @@ class Application
 
         $this->startPluginsAfterBoot();
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
-
         $this->hasBooted = true;
+
+        $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
     }
 
     protected function startPluginsBeforeBoot(): void
@@ -231,9 +237,9 @@ class Application
         );
 
         if ($route instanceof Route) {
-            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_FOUND, $route);
+            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_FOUND, $route);
         } else {
-            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_NOT_FOUND, $currentRelativeUrl);
+            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_NOT_FOUND, $currentRelativeUrl);
         }
 
         $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_AFTER, $route);
@@ -243,11 +249,11 @@ class Application
 
     protected function dispatchResponse(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_SEND_BEFORE, $this->response);
+        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_BEFORE, $this->response);
 
         $this->responseDispatcher->dispatch($this->response);
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_SEND_AFTER, $this->response);
+        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_AFTER, $this->response);
     }
 
     protected function enableErrorReporting(): void
@@ -256,7 +262,7 @@ class Application
         error_reporting($this->config->get('parable.debug.levels') ?? E_ALL);
     }
 
-    protected function disbleErrorReporting(): void
+    protected function disableErrorReporting(): void
     {
         ini_set('display_errors', '0');
         error_reporting(E_ALL | ~E_DEPRECATED);

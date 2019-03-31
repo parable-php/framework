@@ -160,8 +160,7 @@ class Install extends Command
 
         $answer = strtolower($this->input->get());
 
-        if (
-            $default === true && $answer === 'n'
+        if ($default === true && $answer === 'n'
             || $default === false && $answer !== 'y'
         ) {
             $this->output->newline();
@@ -186,7 +185,7 @@ class Install extends Command
             $answer = $default;
         }
 
-        return $default;
+        return $answer;
     }
 
     protected function createDirectory(string $path): bool

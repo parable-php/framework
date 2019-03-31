@@ -2,10 +2,10 @@
 
 namespace Parable\Framework;
 
-use Parable\Framework\Commands\Install;
 use Parable\Console\App;
 use Parable\Console\Command\Help;
 use Parable\Di\Container;
+use Parable\Framework\Commands\Install;
 
 class ConsoleApplication
 {
@@ -27,7 +27,7 @@ class ConsoleApplication
         $this->container = $container;
     }
 
-    public function run()
+    public function run(): void
     {
 
         $this->application->addCommand($help = $this->container->get(Help::class));

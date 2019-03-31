@@ -65,28 +65,6 @@ class Template
         $this->registerClassesFromMagicProperties();
     }
 
-    protected function registerClassesFromMagicProperties()
-    {
-        $reflection = new \ReflectionClass(self::class);
-        $docComment = $reflection->getDocComment();
-        $annotatedProperties = $docComment ? explode(PHP_EOL, $docComment) : [];
-
-        foreach ($annotatedProperties as $magicProperty) {
-            if (strpos($magicProperty, '@property-read') === false) {
-                continue;
-            }
-
-            $partsString = trim(str_replace('* @property-read', '', $magicProperty));
-
-            $parts = explode('$', $partsString);
-
-            [$className, $property] = $parts;
-
-            $this->registerClass(trim($property), trim($className));
-        }
-        return $this;
-    }
-
     public function registerClass(string $propertyName, string $className): void
     {
         $className = '\\' . ltrim($className, '\\');
@@ -110,6 +88,27 @@ class Template
     public function render(): void
     {
         $this->loadTemplatePath($this->templatePath);
+    }
+
+    protected function registerClassesFromMagicProperties(): void
+    {
+        $reflection = new \ReflectionClass(self::class);
+        $docComment = $reflection->getDocComment();
+        $annotatedProperties = $docComment ? explode(PHP_EOL, $docComment) : [];
+
+        foreach ($annotatedProperties as $magicProperty) {
+            if (strpos($magicProperty, '@property-read') === false) {
+                continue;
+            }
+
+            $partsString = trim(str_replace('* @property-read', '', $magicProperty));
+
+            $parts = explode('$', $partsString);
+
+            [$className, $property] = $parts;
+
+            $this->registerClass(trim($property), trim($className));
+        }
     }
 
     protected function loadTemplatePath(string $templatePath): void

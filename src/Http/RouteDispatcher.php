@@ -59,7 +59,7 @@ class RouteDispatcher
         $this->template = $template;
     }
 
-    public function dispatch(Route $route)
+    public function dispatch(Route $route): void
     {
         $this->dispatchedRoute = $route;
 
