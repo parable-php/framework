@@ -68,7 +68,7 @@ class RouteDispatcher
         $this->startOutputBuffer();
 
         $parameters = [];
-        foreach ($route->getParameterValues() as $value) {
+        foreach ($route->getParameterValues()->getAll() as $value) {
             $parameters[] = $value;
         }
 
