@@ -15,13 +15,13 @@
   "require": {
     "php": ">=7.1",
     "ext-json": "*",
-    "parable-php/di": "^0.2.3",
-    "parable-php/event": "^0.2.0",
-    "parable-php/getset": "^0.1.1",
+    "parable-php/console": "^0.2.0",
+    "parable-php/di": "^0.2.4",
+    "parable-php/event": "^0.2.2",
+    "parable-php/getset": "^0.1.2",
+    "parable-php/http": "^0.2.0",
     "parable-php/orm": "^0.1.1",
-    "parable-php/routing": "^0.1.0",
-    "parable-php/console": "^0.1.3",
-    "parable-php/http": "^0.2.0"
+    "parable-php/routing": "^0.1.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0"

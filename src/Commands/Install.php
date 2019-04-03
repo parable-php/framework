@@ -158,17 +158,11 @@ class Install extends Command
         $this->output->newline();
         $this->output->write('<yellow>' . $question . ' [' . $defaultString . '] </yellow>');
 
-        $answer = strtolower($this->input->get());
-
-        if ($default === true && $answer === 'n'
-            || $default === false && $answer !== 'y'
-        ) {
-            $this->output->newline();
-            return false;
-        }
+        $continue = $this->input->getYesNo($default);
 
         $this->output->newline();
-        return true;
+
+        return $continue;
     }
 
     protected function askUserAQuestionWithDefault(string $question, string $default = null): ?string

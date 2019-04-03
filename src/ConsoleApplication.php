@@ -2,7 +2,7 @@
 
 namespace Parable\Framework;
 
-use Parable\Console\App;
+use Parable\Console\Application;
 use Parable\Console\Command\Help;
 use Parable\Di\Container;
 use Parable\Framework\Commands\Install;
@@ -10,7 +10,7 @@ use Parable\Framework\Commands\Install;
 class ConsoleApplication
 {
     /**
-     * @var App
+     * @var Application
      */
     protected $application;
 
@@ -20,7 +20,7 @@ class ConsoleApplication
     protected $container;
 
     public function __construct(
-        App $application,
+        Application $application,
         Container $container
     ) {
         $this->application = $application;
@@ -29,7 +29,6 @@ class ConsoleApplication
 
     public function run(): void
     {
-
         $this->application->addCommand($help = $this->container->get(Help::class));
         $this->application->addCommand($install = $this->container->get(Install::class));
 
