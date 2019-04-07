@@ -102,6 +102,8 @@ class Install extends Command
 
         $this->output->writeln('<success>[OK]</success>');
 
+        $this->output->newline();
+
         if ($this->askUserToContinue(
             'Do you want to install the bootstrap files (index.php, parable_init.php)? (say no if you\'re upgrading)',
             true
@@ -155,7 +157,6 @@ class Install extends Command
             $defaultString = 'y/N';
         }
 
-        $this->output->newline();
         $this->output->write('<yellow>' . $question . ' [' . $defaultString . '] </yellow>');
 
         $continue = $this->input->getYesNo($default);
