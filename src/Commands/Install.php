@@ -41,9 +41,53 @@ class Install extends Command
             return;
         }
 
-        $namespace = $this->askUserAQuestionWithDefault('What is your project\'s root namespace?', 'Project');
-        $sourceDir = $this->askUserAQuestionWithDefault('What source directory do you want to use?', 'src');
-        $publicDir = $this->askUserAQuestionWithDefault('What public directory do you want to use?', 'public');
+        $composerJson = file_get_contents(BASEDIR . '/composer.json');
+        $composerArray = json_decode($composerJson, true);
+
+        $rootNamespaceAndSourceDir = $composerArray['autoload']['psr-4'] ?? null;
+
+        $upgrading = false;
+
+        if ($rootNamespaceAndSourceDir === null) {
+            $this->output->writeln(
+                '<yellow>No root namespace or source directory found in composer.json, assuming new install.</yellow>'
+            );
+        } else {
+            $this->output->writeln(
+                '<yellow>Root namespace and source directory found in composer.json, assuming upgrade.</yellow>'
+            );
+
+            $existingRootNamespace = array_keys($rootNamespaceAndSourceDir)[0];
+            $existingSourceDir = $rootNamespaceAndSourceDir[$existingRootNamespace];
+
+            $existingRootNamespace = trim($existingRootNamespace, '\\');
+
+            $this->output->writeln('  detected root namespace:     <cyan>' . $existingRootNamespace . '</cyan>');
+            $this->output->writeln('  detected source directory:   <cyan>' . $existingSourceDir . '</cyan>');
+
+            $upgrading = $useExisting = $this->askUserToContinue('Do you want to use these? (No will revert to assuming fresh install)');
+
+            if ($upgrading) {
+                $this->output->writeln('Making <cyan>' . $existingRootNamespace . '</cyan> and <cyan>' . $existingSourceDir . '</cyan> the default values.');
+            } else {
+                $this->output->writeln('Not using detected root namespace and source directory.');
+            }
+
+            $this->output->newline();
+        }
+
+        $namespace = $this->askUserAQuestionWithDefault(
+            'What is your project\'s root namespace?',
+            $upgrading ? $existingRootNamespace : 'Project'
+        );
+        $sourceDir = $this->askUserAQuestionWithDefault(
+            'What source directory do you want to use?',
+            $upgrading ? $existingSourceDir : 'src'
+        );
+        $publicDir = $this->askUserAQuestionWithDefault(
+            'What public directory do you want to use?',
+            'public'
+        );
 
         $this->output->newline();
 
@@ -102,8 +146,6 @@ class Install extends Command
 
         $this->output->writeln('<success>[OK]</success>');
 
-        $this->output->newline();
-
         if ($this->askUserToContinue(
             'Do you want to install the bootstrap files (index.php, parable_init.php)? (say no if you\'re upgrading)',
             true
@@ -151,6 +193,8 @@ class Install extends Command
 
     protected function askUserToContinue(string $question = 'Do you want to continue?', bool $default = false): bool
     {
+        $this->output->newline();
+
         if ($default === true) {
             $defaultString = 'Y/n';
         } else {

@@ -9,6 +9,28 @@ use Parable\Routing\Router;
 
 class Boot implements HttpPluginInterface
 {
+    /**
+     * Normally this would not contain this class itself but only actual plugins in a
+     * ###ROOT_NAMESPACE###/Plugins/ namespace, for example.
+     *
+     * The key is the time slot the plugins will be registered in, the values the class names.
+     *
+     * @return string[][]
+     */
+    public static function getPluginsToRegister(): array
+    {
+        return [
+            Application::PLUGIN_BEFORE_BOOT => [
+                self::class,
+            ],
+            Application::PLUGIN_AFTER_BOOT => [
+            ],
+        ];
+    }
+
+    /**
+     * Normally this would be in a separate class, but for demo purposes this works.
+     */
     public function configure(Config $config, Router $router): void
     {
         // Set up your config and routing here and Parable handles the rest.
