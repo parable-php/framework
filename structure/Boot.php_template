@@ -2,6 +2,7 @@
 
 namespace ###ROOT_NAMESPACE###;
 
+use Parable\Framework\Application;
 use Parable\Framework\Config;
 use Parable\Framework\Plugins\HttpPluginInterface;
 use Parable\Routing\Route;
