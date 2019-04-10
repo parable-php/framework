@@ -147,7 +147,7 @@ class Install extends Command
         $this->output->writeln('<success>[OK]</success>');
 
         if ($this->askUserToContinue(
-            'Do you want to install the bootstrap files (index.php, parable_init.php)? (say no if you\'re upgrading)',
+            'Do you want to install the bootstrap files (index.php, parable_init.php)? (say no if you\'ve made changes to these)',
             true
         )) {
             if (!$this->copyTemplateFile('parable_init.php', null, $namespace, $sourceDir, $publicDir)) {
@@ -158,19 +158,21 @@ class Install extends Command
             }
         }
 
-        if ($this->askUserToContinue(
-            'Do you want to install the example files (Boot.php, welcome.phtml)? (say no if you\'re upgrading)',
-            true
-        )) {
-            if (!$this->copyTemplateFile('Boot.php', $sourceDir, $namespace, $sourceDir, $publicDir)) {
-                return;
-            }
-            if (!$this->copyTemplateFile('welcome.phtml', $sourceDir, $namespace, $sourceDir, $publicDir)) {
-                return;
+        if ($upgrading === false) {
+            if ($this->askUserToContinue(
+                'Do you want to install the example files (Boot.php, welcome.phtml)? (say no if you\'re upgrading)',
+                true
+            )) {
+                if (!$this->copyTemplateFile('Boot.php', $sourceDir, $namespace, $sourceDir, $publicDir)) {
+                    return;
+                }
+                if (!$this->copyTemplateFile('welcome.phtml', $sourceDir, $namespace, $sourceDir, $publicDir)) {
+                    return;
+                }
             }
         }
 
-        if ($this->askUserToContinue('Do you want to install the (Apache 2.4+) .htaccess files?')) {
+        if ($this->askUserToContinue('Do you want to install the (Apache 2.4+) .htaccess files? (say no if you\'ve made changes to these)')) {
             if (!$this->copyTemplateFile('.htaccess_root', null, $namespace, $sourceDir, $publicDir)) {
                 return;
             }
@@ -184,7 +186,7 @@ class Install extends Command
             $this->output->newline();
         }
 
-        $this->output->writeln('Parable has been installed!');
+        $this->output->writeln('Parable ' . Application::VERSION . ' has been installed!');
         $this->output->newline();
         $this->output->writeln('You can start adding your code to ' . $sourceDir . '.');
         $this->output->newline();
