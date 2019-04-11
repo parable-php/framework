@@ -197,7 +197,12 @@ class Application
 
         session_start();
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_SESSION_START_AFTER, session_name());
+        $sessionName = session_name();
+
+        $this->eventManager->trigger(
+            EventTriggers::APPLICATION_SESSION_START_AFTER,
+            $sessionName
+        );
     }
 
     protected function setupDatabaseFromConfig(Config $config): void
@@ -220,9 +225,11 @@ class Application
 
         date_default_timezone_set($timezone);
 
+        $currentlySetTimezone = date_default_timezone_get();
+
         $this->eventManager->trigger(
             EventTriggers::APPLICATION_SET_DEFAULT_TIMEZONE_AFTER,
-            date_default_timezone_get()
+            $currentlySetTimezone
         );
     }
 
