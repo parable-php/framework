@@ -147,16 +147,19 @@ class Application
             $this->enableErrorReporting();
         }
 
+        $timezone = $this->config->get('parable.default-timezone');
+        if (is_string($timezone)) {
+            $this->setDefaultTimezone($timezone);
+        } else {
+            $this->setDefaultTimeZone('UTC');
+        }
+
         if ($this->config->has('parable.database.type')) {
-            $this->setupDatabase();
+            $this->setupDatabaseFromConfig($this->config);
         }
 
-        if ($this->config->get('parable.session.enabled') === true) {
+        if ($this->config->get('parable.session.enabled') !== false) {
             $this->startSession();
-        }
-
-        if ($this->config->has('parable.default-timezone')) {
-            $this->setDefaultTimezone();
         }
 
         $this->startPluginsAfterBoot();
@@ -197,12 +200,12 @@ class Application
         $this->eventManager->trigger(EventTriggers::APPLICATION_SESSION_START_AFTER, session_name());
     }
 
-    protected function setupDatabase(): void
+    protected function setupDatabaseFromConfig(Config $config): void
     {
         $this->eventManager->trigger(EventTriggers::APPLICATION_INIT_DATABASE_BEFORE);
 
         $databaseFactory = new DatabaseFactory();
-        $database = $databaseFactory->createFromConfig($this->config);
+        $database = $databaseFactory->createFromConfig($config);
 
         $this->container->store($database);
 
@@ -211,10 +214,8 @@ class Application
         $this->eventManager->trigger(EventTriggers::APPLICATION_INIT_DATABASE_AFTER, $database);
     }
 
-    protected function setDefaultTimeZone(): void
+    protected function setDefaultTimeZone(string $timezone): void
     {
-        $timezone = $this->config->get('parable.default-timezone');
-
         $this->eventManager->trigger(EventTriggers::APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE, $timezone);
 
         date_default_timezone_set($timezone);
