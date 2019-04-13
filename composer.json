@@ -20,7 +20,7 @@
     "parable-php/event": "^0.2.2",
     "parable-php/getset": "^0.1.2",
     "parable-php/http": "^0.2.0",
-    "parable-php/orm": "^0.1.1",
+    "parable-php/orm": "^0.2.0",
     "parable-php/routing": "^0.2.0"
   },
   "require-dev": {
