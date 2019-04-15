@@ -4,8 +4,23 @@ namespace Parable\Framework;
 
 class Path
 {
+    /**
+     * @var string
+     */
+    protected $root;
+
+    public function __construct(string $root = BASEDIR)
+    {
+        $this->root = rtrim($root, '/');
+    }
+
+    public function getRoot(): string
+    {
+        return $this->root;
+    }
+
     public function getPath(string $path): string
     {
-        return BASEDIR . '/' . trim($path, '/');
+        return $this->root . '/' . trim($path, '/');
     }
 }

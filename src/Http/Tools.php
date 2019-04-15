@@ -27,35 +27,47 @@ class Tools
         $this->request = $request;
     }
 
+    public function getBaseUrl(): string
+    {
+        return trim(
+            str_replace($this->getCurrentRelativeUrl(), '/', $this->request->getUri()->getUriString()),
+            '/'
+        );
+    }
+
     public function getCurrentRelativeUrl(): string
     {
         $currentRelativeUrl = $this->getCollection->get('PARABLE_REDIRECT_URL');
 
-        if ($currentRelativeUrl === null) {
-            return '/';
-        }
-
-        return (string)$currentRelativeUrl;
+        return $currentRelativeUrl ?? '/';
     }
 
-    public function getCurrentFullUrl(): string
+    public function getCurrentUrl(): string
     {
-        return str_replace(':80', '', $this->request->getUri()->getUriString());
-    }
-
-    public function getBaseUrl(): string
-    {
-        return str_replace($this->getCurrentRelativeUrl(), '', $this->getCurrentFullUrl());
+        return $this->request->getUri()->getUriString();
     }
 
     public function buildUrl(string $path): string
     {
-        return $this->getBaseUrl() . '/' . $path;
+        return rtrim(
+            rtrim(
+                $this->getBaseUrl(),
+                '/'
+            ) . '/' . $path,
+            '/'
+        );
     }
 
     public function redirect(string $target): void
     {
         HeaderSender::send('location: ' . $target);
+
+        exit(0);
+    }
+
+    public function redirectToSelf(): void
+    {
+        $this->redirect($this->getCurrentUrl());
     }
 
     public function redirectToRoute(Route $route, array $parameters = []): void
@@ -71,6 +83,6 @@ class Tools
             $url = str_replace('{' . $param . '}', $value, $url);
         }
 
-        return $url;
+        return $this->buildUrl($url);
     }
 }

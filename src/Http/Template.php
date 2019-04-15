@@ -9,9 +9,11 @@ use Parable\Http\Response;
 use Parable\Http\Traits\SupportsOutputBuffers;
 
 /**
+ * @property-read \Parable\Di\Container $container
  * @property-read \Parable\Event\EventManager $eventManager
  * @property-read \Parable\Framework\Path $path
  * @property-read \Parable\Framework\Config $config
+ * @property-read \Parable\Framework\Http\Tools $tools
  * @property-read \Parable\GetSet\CookieCollection $cookieCollection
  * @property-read \Parable\GetSet\DataCollection $dataCollection
  * @property-read \Parable\GetSet\FilesCollection $filesCollection
@@ -39,36 +41,26 @@ class Template
     protected $path;
 
     /**
-     * @var Response
-     */
-    protected $response;
-
-    /**
      * @var string
      */
     protected $templatePath;
 
     /**
-     * @var array
+     * @var string|null
      */
-    protected $classes = [];
+    protected $templateRoot;
 
     public function __construct(
         Container $container,
-        Path $path,
-        Response $response
+        Path $path
     ) {
         $this->container = $container;
         $this->path = $path;
-        $this->response = $response;
-
-        $this->registerClassesFromMagicProperties();
     }
 
-    public function registerClass(string $propertyName, string $className): void
+    public function setTemplateRoot(string $templateRoot): void
     {
-        $className = '\\' . ltrim($className, '\\');
-        $this->classes[$propertyName] = $className;
+        $this->templateRoot = $templateRoot;
     }
 
     public function setTemplatePath(string $templatePath): void
@@ -90,41 +82,62 @@ class Template
         $this->loadTemplatePath($this->templatePath);
     }
 
-    protected function registerClassesFromMagicProperties(): void
-    {
-        $reflection = new \ReflectionClass(self::class);
-        $docComment = $reflection->getDocComment();
-        $annotatedProperties = $docComment ? explode(PHP_EOL, $docComment) : [];
-
-        foreach ($annotatedProperties as $magicProperty) {
-            if (strpos($magicProperty, '@property-read') === false) {
-                continue;
-            }
-
-            $partsString = trim(str_replace('* @property-read', '', $magicProperty));
-
-            $parts = explode('$', $partsString);
-
-            [$className, $property] = $parts;
-
-            $this->registerClass(trim($property), trim($className));
-        }
-    }
-
     protected function loadTemplatePath(string $templatePath): void
     {
-        require $templatePath;
+        $fullPath = $this->buildTemplatePathFromRoot($templatePath);
+
+        if (file_exists($fullPath)) {
+            require $fullPath;
+            return;
+        }
+
+        if (file_exists($this->path->getPath($fullPath))) {
+            require $this->path->getPath($fullPath);
+            return;
+        }
+
+        throw new Exception(sprintf(
+            "Template path '%s' could not be loaded.",
+            $fullPath
+        ));
     }
 
-    public function __get($propertyName)
+    protected function buildTemplatePathFromRoot(string $templatePath): string
     {
-        if (!isset($this->classes[$propertyName])) {
+        if ($this->templateRoot === null) {
+            return $templatePath;
+        }
+
+        return rtrim($this->templateRoot, '/') . '/' . $templatePath;
+    }
+
+    public function __get(string $name)
+    {
+        if (property_exists($this, $name)) {
+            return $this->{$name};
+        }
+
+        $reflection = new \ReflectionClass(self::class);
+        $docComment = $reflection->getDocComment();
+
+        $annotatedProperties = explode(PHP_EOL, $docComment);
+        $matchedProperty = null;
+
+        foreach ($annotatedProperties as $annotatedProperty) {
+            if (strpos($annotatedProperty, '$' . $name) !== false) {
+                $matchedProperty = str_replace(' * @property-read ', '', $annotatedProperty);
+                $matchedProperty = str_replace('$' . $name, '', $matchedProperty);
+                break;
+            }
+        }
+
+        if ($matchedProperty === null) {
             throw new Exception(sprintf(
-                "Property '%s' was not registered on the Template/",
-                $propertyName
+                "Could not load property '%s' through Template.",
+                $name
             ));
         }
 
-        return $this->container->get($this->classes[$propertyName]);
+        return $this->container->get($matchedProperty);
     }
 }
