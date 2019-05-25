@@ -5,7 +5,6 @@ namespace Parable\Framework\Http;
 use Parable\Di\Container;
 use Parable\Framework\Exception;
 use Parable\Framework\Path;
-use Parable\Http\Response;
 use Parable\Http\Traits\SupportsOutputBuffers;
 
 /**

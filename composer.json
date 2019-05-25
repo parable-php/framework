@@ -15,7 +15,7 @@
   "require": {
     "php": ">=7.1",
     "ext-json": "*",
-    "parable-php/console": "^0.2.0",
+    "parable-php/console": "^0.4.0",
     "parable-php/di": "^0.2.5",
     "parable-php/event": "^0.2.2",
     "parable-php/getset": "^0.1.3",

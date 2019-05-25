@@ -3,9 +3,9 @@
 namespace Parable\Framework;
 
 use Parable\Console\Application;
-use Parable\Console\Command\Help;
+use Parable\Console\Commands\HelpCommand;
 use Parable\Di\Container;
-use Parable\Framework\Commands\Install;
+use Parable\Framework\Commands\InstallCommand;
 
 class ConsoleApplication
 {
@@ -29,10 +29,10 @@ class ConsoleApplication
 
     public function run(): void
     {
-        $this->application->addCommand($help = $this->container->get(Help::class));
-        $this->application->addCommand($install = $this->container->get(Install::class));
+        $this->application->addCommandByNameAndClass('help', HelpCommand::class);
+        $this->application->addCommandByNameAndClass('install', InstallCommand::class);
 
-        $this->application->setDefaultCommand($help);
+        $this->application->setDefaultCommandByName('help');
 
         $this->application->run();
     }

@@ -23,11 +23,10 @@ class DatabaseFactory
             $config->get('parable.database') ?? []
         );
 
-        switch ($config->get('parable.database.type')) {
-            case Database::TYPE_MYSQL:
-                return $this->createMySqlDatabaseFromConfigValues($configValuesMerged);
-            case Database::TYPE_SQLITE:
-                return $this->createSqliteDatabaseFromConfigValues($configValuesMerged);
+        if ($config->get('parable.database.type') === 0) {
+            return $this->createMySqlDatabaseFromConfigValues($configValuesMerged);
+        } elseif ($config->get('parable.database.type') === 1) {
+            return $this->createSqliteDatabaseFromConfigValues($configValuesMerged);
         }
 
         throw new Exception('Could not create Database from config.');
@@ -41,21 +40,27 @@ class DatabaseFactory
         if ($configValues['host'] !== null) {
             $database->setHost($configValues['host']);
         }
+
         if ($configValues['database'] !== null) {
             $database->setDatabaseName($configValues['database']);
         }
+
         if ($configValues['username'] !== null) {
             $database->setUsername($configValues['username']);
         }
+
         if ($configValues['password'] !== null) {
             $database->setPassword($configValues['password']);
         }
+
         if ($configValues['port'] !== null) {
             $database->setPort($configValues['port']);
         }
+
         if ($configValues['errorMode'] !== null) {
             $database->setErrorMode($configValues['errorMode']);
         }
+
         if ($configValues['charSet'] !== null) {
             $database->setCharSet($configValues['charSet']);
         }
@@ -71,6 +76,7 @@ class DatabaseFactory
         if ($configValues['database'] !== null) {
             $database->setDatabaseName($configValues['database']);
         }
+
         if ($configValues['errorMode'] !== null) {
             $database->setErrorMode($configValues['errorMode']);
         }

@@ -2,10 +2,12 @@
 
 namespace Parable\Framework\Http;
 
+use Parable\Framework\Exception;
 use Parable\GetSet\GetCollection;
 use Parable\Http\HeaderSender;
 use Parable\Http\Request;
 use Parable\Routing\Route;
+use Parable\Routing\Router;
 
 class Tools
 {
@@ -19,12 +21,19 @@ class Tools
      */
     protected $request;
 
+    /**
+     * @var Router
+     */
+    protected $router;
+
     public function __construct(
         GetCollection $getCollection,
-        Request $request
+        Request $request,
+        Router $router
     ) {
         $this->getCollection = $getCollection;
         $this->request = $request;
+        $this->router = $router;
     }
 
     public function getBaseUrl(): string
@@ -49,13 +58,7 @@ class Tools
 
     public function buildUrl(string $path): string
     {
-        return rtrim(
-            rtrim(
-                $this->getBaseUrl(),
-                '/'
-            ) . '/' . $path,
-            '/'
-        );
+        return rtrim($this->getBaseUrl(), '/') . '/' . trim($path, '/');
     }
 
     public function redirect(string $target): void
@@ -73,6 +76,17 @@ class Tools
     public function redirectToRoute(Route $route, array $parameters = []): void
     {
         $this->redirect($this->buildUrlFromRoute($route, $parameters));
+    }
+
+    public function buildUrlFromRouteName(string $routeName, array $parameters = []): string
+    {
+        $route = $this->router->getRouteByName($routeName);
+
+        if ($route === null) {
+            throw new Exception(sprintf('Could not find route named %s', $routeName));
+        }
+
+        return $this->buildUrlFromRoute($route, $parameters);
     }
 
     public function buildUrlFromRoute(Route $route, array $parameters = []): string

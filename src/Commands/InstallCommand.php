@@ -6,7 +6,7 @@ use Parable\Console\Command;
 use Parable\Framework\Application;
 use Parable\Framework\Path;
 
-class Install extends Command
+class InstallCommand extends Command
 {
     /**
      * @var Path
@@ -65,10 +65,16 @@ class Install extends Command
             $this->output->writeln('  detected root namespace:     <cyan>' . $existingRootNamespace . '</cyan>');
             $this->output->writeln('  detected source directory:   <cyan>' . $existingSourceDir . '</cyan>');
 
-            $upgrading = $useExisting = $this->askUserToContinue('Do you want to use these? (No will revert to assuming fresh install)');
+            $upgrading = $useExisting = $this->askUserToContinue(
+                'Do you want to use these? (No will revert to assuming fresh install)'
+            );
 
             if ($upgrading) {
-                $this->output->writeln('Making <cyan>' . $existingRootNamespace . '</cyan> and <cyan>' . $existingSourceDir . '</cyan> the default values.');
+                $this->output->writeln(sprintf(
+                    'Making <cyan>%s</cyan> and <cyan>%s</cyan> the default values.',
+                    $existingRootNamespace,
+                    $existingSourceDir
+                ));
             } else {
                 $this->output->writeln('Not using detected root namespace and source directory.');
             }
@@ -93,9 +99,18 @@ class Install extends Command
 
         $this->output->writeln('<yellow>You have chosen:</yellow>');
 
-        $this->output->writeln('  root namespace:     <cyan>' . $namespace . '</cyan> (classes such as \\' . $namespace . '\\Controller)');
-        $this->output->writeln('  source directory:   <cyan>' . $sourceDir . '</cyan> (your project files will be loaded from here)');
-        $this->output->writeln('  public directory:   <cyan>' . $publicDir . '</cyan> (index.php will be situated here and is the place for your css/js)');
+        $this->output->writeln(sprintf(
+            '  root namespace:     <cyan>%s</cyan> (classes such as \\' . $namespace . '\\Controller)',
+            $namespace
+        ));
+        $this->output->writeln(sprintf(
+            '  source directory:   <cyan>%s</cyan> (your project files will be loaded from here)',
+            $sourceDir
+        ));
+        $this->output->writeln(sprintf(
+            '  public directory:   <cyan>%s</cyan> (index.php will be situated here and is the place for your css/js)',
+            $publicDir
+        ));
 
         $sourceDirFull = $this->path->getPath($sourceDir);
         $publicDirFull = $this->path->getPath($publicDir);
@@ -103,8 +118,8 @@ class Install extends Command
         $this->output->newline();
 
         $this->output->writeln('<yellow>The following directories will now be created (if non-existent):</yellow>');
-        $this->output->writeln('  ' .  $sourceDirFull);
-        $this->output->writeln('  ' .  $publicDirFull);
+        $this->output->writeln('  ' . $sourceDirFull);
+        $this->output->writeln('  ' . $publicDirFull);
 
         if (!$this->askUserToContinue()) {
             $this->output->writeln('<info>You chose not to continue.</info>');
@@ -128,14 +143,17 @@ class Install extends Command
         if (!array_key_exists('autoload', $composerArray)) {
             $composerArray['autoload'] = [];
         }
+
         if (!array_key_exists('psr-4', $composerArray['autoload'])) {
             $composerArray['autoload']['psr-4'] = [];
         }
+
         $composerArray['autoload']['psr-4'][$namespace . '\\'] = $sourceDir;
 
         if (!array_key_exists('files', $composerArray['autoload'])) {
             $composerArray['autoload']['files'] = [];
         }
+
         if (!in_array('parable_init.php', $composerArray['autoload']['files'])) {
             $composerArray['autoload']['files'][] = 'parable_init.php';
         }

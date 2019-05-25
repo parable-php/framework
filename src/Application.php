@@ -8,10 +8,10 @@ use Parable\Framework\Http\RouteDispatcher;
 use Parable\Framework\Http\Tools;
 use Parable\Framework\Plugins\PluginManager;
 use Parable\GetSet\GetCollection;
+use Parable\Http\Request;
 use Parable\Http\RequestFactory;
 use Parable\Http\Response;
 use Parable\Http\ResponseDispatcher;
-use Parable\Http\Request;
 use Parable\Routing\Route;
 use Parable\Routing\Router;
 
@@ -94,7 +94,7 @@ class Application
         Router $router
     ) {
         if (Context::isCli()) {
-            throw new Exception('Cannot boot Application in cli context.');
+            throw new Exception('Cannot boot Application in CLI context.');
         }
 
         $this->container = $container;

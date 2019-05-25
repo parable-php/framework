@@ -4,17 +4,18 @@
          backupStaticAttributes="false"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
-         colors="true"
+         bootstrap="src/initialize.php"
          cacheResult="false"
+         colors="true"
     >
-    <php>
-        <ini name="memory_limit" value="1024M" />
-        <ini name="display_errors" value="stdout" />
-        <ini name="error_log" value="/dev/null" />
-    </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <ini name="memory_limit" value="1024M" />
+        <ini name="display_errors" value="stdout" />
+        <ini name="error_log" value="/dev/null" />
+    </php>
 </phpunit>
