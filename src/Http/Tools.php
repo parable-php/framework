@@ -14,7 +14,7 @@ class Tools
     /**
      * @var GetCollection
      */
-    protected $getCollection;
+    protected $get;
 
     /**
      * @var Request
@@ -27,11 +27,11 @@ class Tools
     protected $router;
 
     public function __construct(
-        GetCollection $getCollection,
+        GetCollection $get,
         Request $request,
         Router $router
     ) {
-        $this->getCollection = $getCollection;
+        $this->get = $get;
         $this->request = $request;
         $this->router = $router;
     }
@@ -46,9 +46,9 @@ class Tools
 
     public function getCurrentRelativeUrl(): string
     {
-        $currentRelativeUrl = $this->getCollection->get('PARABLE_REDIRECT_URL');
+        $currentRelativeUrl = $this->get->get('PARABLE_REDIRECT_URL');
 
-        return $currentRelativeUrl ?? '/';
+        return $currentRelativeUrl !== null ? (string)$currentRelativeUrl : '/';
     }
 
     public function getCurrentUrl(): string
@@ -65,7 +65,7 @@ class Tools
     {
         HeaderSender::send('location: ' . $target);
 
-        exit(0);
+        $this->terminate(0);
     }
 
     public function redirectToSelf(): void
@@ -83,7 +83,7 @@ class Tools
         $route = $this->router->getRouteByName($routeName);
 
         if ($route === null) {
-            throw new Exception(sprintf('Could not find route named %s', $routeName));
+            throw new Exception(sprintf("Could not find route named '%s'", $routeName));
         }
 
         return $this->buildUrlFromRoute($route, $parameters);
@@ -98,5 +98,10 @@ class Tools
         }
 
         return $this->buildUrl($url);
+    }
+
+    public function terminate(int $exitCode): void
+    {
+        exit($exitCode); // @codeCoverageIgnore
     }
 }

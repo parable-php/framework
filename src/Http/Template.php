@@ -13,14 +13,14 @@ use Parable\Http\Traits\SupportsOutputBuffers;
  * @property-read \Parable\Framework\Path $path
  * @property-read \Parable\Framework\Config $config
  * @property-read \Parable\Framework\Http\Tools $tools
- * @property-read \Parable\GetSet\CookieCollection $cookieCollection
- * @property-read \Parable\GetSet\DataCollection $dataCollection
- * @property-read \Parable\GetSet\FilesCollection $filesCollection
- * @property-read \Parable\GetSet\GetCollection $getCollection
- * @property-read \Parable\GetSet\InputStreamCollection $inputStreamCollection
- * @property-read \Parable\GetSet\PostCollection $postCollection
- * @property-read \Parable\GetSet\ServerCollection $serverCollection
- * @property-read \Parable\GetSet\SessionCollection $sessionCollection
+ * @property-read \Parable\GetSet\CookieCollection $cookie
+ * @property-read \Parable\GetSet\DataCollection $data
+ * @property-read \Parable\GetSet\FilesCollection $files
+ * @property-read \Parable\GetSet\GetCollection $get
+ * @property-read \Parable\GetSet\InputStreamCollection $inputStream
+ * @property-read \Parable\GetSet\PostCollection $post
+ * @property-read \Parable\GetSet\ServerCollection $server
+ * @property-read \Parable\GetSet\SessionCollection $session
  * @property-read \Parable\Http\Request $request
  * @property-read \Parable\Http\Response $response
  * @property-read \Parable\Routing\Router $router
@@ -67,17 +67,27 @@ class Template
         $this->templatePath = $templatePath;
     }
 
-    public function partial($templatePath): string
+    public function partial(string $templatePath): string
     {
         $this->startOutputBuffer();
 
-        $this->loadTemplatePath($templatePath);
+        try {
+            $this->loadTemplatePath($templatePath);
+        } catch (Exception $e) {
+            $this->undoOutputBuffer();
+
+            throw $e;
+        }
 
         return $this->getOutputBuffer();
     }
 
     public function render(): void
     {
+        if (!$this->templatePath) {
+            return;
+        }
+
         $this->loadTemplatePath($this->templatePath);
     }
 
@@ -137,6 +147,6 @@ class Template
             ));
         }
 
-        return $this->container->get($matchedProperty);
+        return $this->container->get((string)$matchedProperty);
     }
 }

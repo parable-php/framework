@@ -8,6 +8,15 @@ class DatabaseFactory
 {
     public function createFromConfig(Config $config): ?Database
     {
+        if ($config->get('parable.database.type') !== null) {
+            return $this->createDatabaseFromConfig($config);
+        }
+
+        throw new Exception('Cannot create database from provided config.');
+    }
+
+    protected function createDatabaseFromConfig(Config $config): Database
+    {
         $configValues = [
             'host' => null,
             'database' => null,
@@ -29,7 +38,10 @@ class DatabaseFactory
             return $this->createSqliteDatabaseFromConfigValues($configValuesMerged);
         }
 
-        throw new Exception('Could not create Database from config.');
+        throw new Exception(sprintf(
+            'Unknown database type: %s.',
+            $config->get('parable.database.type')
+        ));
     }
 
     protected function createMySqlDatabaseFromConfigValues(array $configValues): Database

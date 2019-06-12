@@ -25,14 +25,14 @@ class PluginManager
     /**
      * @param string|HttpPluginInterface|CliPluginInterface|GenericPluginInterface $pluginClassName
      */
-    public static function addPlugin(string $pluginClassName, string $timeSlot): void
+    public static function addPlugin(string $timeSlot, string $pluginClassName): void
     {
         self::$pluginClassNames[$timeSlot][] = $pluginClassName;
     }
 
     public static function startPlugins(string $timeSlot, Container $container): void
     {
-        if (!array_key_exists($timeSlot, self::$pluginClassNames)) {
+        if (!array_key_exists($timeSlot, static::$pluginClassNames)) {
             return;
         }
 
@@ -41,7 +41,7 @@ class PluginManager
 
             $validPluginInterface = false;
 
-            foreach (self::$acceptedPluginInterfaces as $acceptedPluginInterface) {
+            foreach (static::$acceptedPluginInterfaces as $acceptedPluginInterface) {
                 if ($plugin instanceof $acceptedPluginInterface) {
                     $validPluginInterface = true;
                     break;
@@ -52,19 +52,19 @@ class PluginManager
                 throw new Exception(sprintf(
                     "Plugin '%s' does not implement a valid plugin interface (%s)",
                     $pluginClassName,
-                    implode(', ', self::$acceptedPluginInterfaces)
+                    implode(', ', static::$acceptedPluginInterfaces)
                 ));
             }
 
-            $dependencies = [$container->get(Config::class)];
+            $config = $container->get(Config::class);
 
-            if ($plugin instanceof HttpPluginInterface && Context::isHttp()) {
-                $dependencies[] = $container->get(Router::class);
+            if ($plugin instanceof GenericPluginInterface) {
+                $plugin->configure($config);
+            } elseif ($plugin instanceof HttpPluginInterface && Context::isHttp()) {
+                $plugin->configure($config, $container->get(Router::class));
             } elseif ($plugin instanceof CliPluginInterface && Context::isCli()) {
-                $dependencies[] = $container->get(ConsoleApplication::class);
+                $plugin->configure($config, $container->get(ConsoleApplication::class));
             }
-
-            $plugin->configure(...$dependencies);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Parable\Framework\Tests;
 
 use Parable\Framework\Path;
 
-class PathTest extends \PHPUnit\Framework\TestCase
+class PathTest extends AbstractTestCase
 {
     public function testBasePathInstance(): void
     {

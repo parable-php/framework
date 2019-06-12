@@ -18,8 +18,8 @@ require 'vendor/autoload.php';
 foreach (Boot::getPluginsToRegister() as $timeSlot => $pluginClassNames) {
     foreach ($pluginClassNames as $pluginClassName) {
         PluginManager::addPlugin(
-            $pluginClassName,
-            $timeSlot
+            $timeSlot,
+            $pluginClassName
         );
     }
 }

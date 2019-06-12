@@ -81,25 +81,25 @@ class RouteDispatcher
                 $callable(...$parameters);
             }
 
-            $template = $route->getMetadataValue('template');
-
-            if ($template !== null) {
-                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $template);
-
-                $this->startOutputBuffer();
-
-                $this->template->setTemplatePath($template);
-                $this->template->render();
-
-                $this->response->appendBody($this->getOutputBuffer());
-
-                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $template);
-            }
-
             $content = $this->getOutputBuffer();
 
             $this->response->setStatusCode(200);
             $this->response->appendBody($content);
+
+            $templatePath = $route->getMetadataValue('template');
+
+            if ($templatePath !== null && !empty($templatePath)) {
+                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $templatePath);
+
+                $this->startOutputBuffer();
+
+                $this->template->setTemplatePath((string)$templatePath);
+                $this->template->render();
+
+                $this->response->appendBody($this->getOutputBuffer());
+
+                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $templatePath);
+            }
 
             $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_AFTER, $route);
         } catch (Throwable $e) {

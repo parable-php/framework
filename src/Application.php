@@ -40,7 +40,7 @@ class Application
     /**
      * @var GetCollection
      */
-    protected $getCollection;
+    protected $get;
 
     /**
      * @var Path
@@ -86,7 +86,7 @@ class Application
         Container $container,
         Config $config,
         EventManager $eventManager,
-        GetCollection $getCollection,
+        GetCollection $get,
         Path $path,
         Response $response,
         ResponseDispatcher $responseDispatcher,
@@ -94,13 +94,13 @@ class Application
         Router $router
     ) {
         if (Context::isCli()) {
-            throw new Exception('Cannot boot Application in CLI context.');
+            throw new Exception('Application cannot be used in CLI context.');
         }
 
         $this->container = $container;
         $this->config = $config;
         $this->eventManager = $eventManager;
-        $this->getCollection = $getCollection;
+        $this->get = $get;
         $this->path = $path;
         $this->response = $response;
         $this->responseDispatcher = $responseDispatcher;
@@ -117,6 +117,8 @@ class Application
 
     public function run(): void
     {
+        $this->eventManager->trigger(EventTriggers::APPLICATION_RUN_BEFORE, $this);
+
         if (!$this->hasBooted) {
             $this->boot();
         }
@@ -131,13 +133,15 @@ class Application
         }
 
         $this->dispatchResponse();
+
+        $this->eventManager->trigger(EventTriggers::APPLICATION_RUN_AFTER, $this);
     }
 
     public function boot(): void
     {
         $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_BEFORE, $this);
 
-        if ($this->hasBooted) {
+        if ($this->hasBooted()) {
             throw new Exception('App has already booted.');
         }
 
@@ -145,6 +149,8 @@ class Application
 
         if ($this->config->get('parable.debug.enabled') === true) {
             $this->enableErrorReporting();
+        } else {
+            $this->disableErrorReporting();
         }
 
         $timezone = $this->config->get('parable.default-timezone');
@@ -169,6 +175,11 @@ class Application
         $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
     }
 
+    public function hasBooted(): bool
+    {
+        return $this->hasBooted;
+    }
+
     protected function startPluginsBeforeBoot(): void
     {
         $this->eventManager->trigger(EventTriggers::APPLICATION_PLUGINS_START_BEFORE_BOOT_BEFORE);
@@ -191,11 +202,17 @@ class Application
     {
         $this->eventManager->trigger(EventTriggers::APPLICATION_SESSION_START_BEFORE);
 
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+
         if ($this->config->get('parable.session.name') !== null) {
             session_name((string)$this->config->get('parable.session.name'));
         }
 
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         $sessionName = session_name();
 
@@ -272,6 +289,10 @@ class Application
 
     protected function disableErrorReporting(): void
     {
+        if (ini_get('display_errors') !== '1') {
+            return;
+        }
+
         ini_set('display_errors', '0');
         error_reporting(E_ALL | ~E_DEPRECATED);
     }

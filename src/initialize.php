@@ -19,9 +19,3 @@ if (!defined('BASEDIR')) {
 
     define('BASEDIR', $basedir);
 }
-
-if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('IN_TEST', true);
-} else {
-    define('IN_TEST', false);
-}

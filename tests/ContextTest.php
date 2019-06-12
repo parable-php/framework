@@ -4,7 +4,7 @@ namespace Parable\Framework\Tests;
 
 use Parable\Framework\Context;
 
-class ContextTest extends \PHPUnit\Framework\TestCase
+class ContextTest extends AbstractTestCase
 {
     public function testIsCli(): void
     {
@@ -14,5 +14,15 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testIsHttp(): void
     {
         self::assertFalse(Context::isHttp());
+    }
+
+    public function testSetIsCli(): void
+    {
+        Context::setIsCliForTest(false);
+
+        self::assertFalse(Context::isCli());
+        self::assertTrue(Context::isHttp());
+
+        Context::clearIsCliForTest();
     }
 }

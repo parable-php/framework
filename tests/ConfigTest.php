@@ -5,7 +5,7 @@ namespace Parable\Framework\Tests;
 use Parable\Framework\Config;
 use Parable\GetSet\Resource\LocalResourceInterface;
 
-class ConfigTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends AbstractTestCase
 {
     public function testConfig(): void
     {

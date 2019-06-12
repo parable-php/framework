@@ -3,23 +3,19 @@
 namespace Parable\Framework\Tests;
 
 use Parable\Console\Application;
-use Parable\Console\Command\Help;
 use Parable\Console\Commands\HelpCommand;
-use Parable\Di\Container;
 use Parable\Framework\Commands\InstallCommand;
 use Parable\Framework\ConsoleApplication;
 use Parable\Framework\Tests\Classes\ConsoleApplicationWrapper;
 
-class ConsoleApplicationTest extends \PHPUnit\Framework\TestCase
+class ConsoleApplicationTest extends AbstractTestCase
 {
     public function testConsoleApplicationSetsHelpAndInstallCommands(): void
     {
-        $di = new Container();
+        $application = $this->container->get(ConsoleApplicationWrapper::class);
+        $this->container->store($application, Application::class);
 
-        $application = $di->get(ConsoleApplicationWrapper::class);
-        $di->store($application, Application::class);
-
-        $consoleApplication = $di->get(ConsoleApplication::class);
+        $consoleApplication = $this->container->get(ConsoleApplication::class);
 
         self::assertCount(0, $application->getCommands());
 

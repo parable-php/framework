@@ -9,6 +9,8 @@ class EventTriggers
      */
     public const APPLICATION_BOOT_BEFORE = 'parable_boot_before';
     public const APPLICATION_BOOT_AFTER = 'parable_boot_after';
+    public const APPLICATION_RUN_BEFORE = 'parable_run_before';
+    public const APPLICATION_RUN_AFTER = 'parable_run_after';
     public const APPLICATION_ROUTE_MATCH_FOUND = 'parable_route_match_found';
     public const APPLICATION_ROUTE_MATCH_NOT_FOUND = 'parable_route_match_not_found';
     public const APPLICATION_LOAD_CONFIG_BEFORE = 'parable_load_config_before';
