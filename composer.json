@@ -40,5 +40,7 @@
       "Parable\\Framework\\Tests\\": "tests"
     }
   },
-  "bin": "src/parable"
+  "bin": [
+    "src/parable"
+  ]
 }
