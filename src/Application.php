@@ -84,35 +84,14 @@ class Application
 
     public function __construct(
         Container $container,
-        Config $config,
-        EventManager $eventManager,
-        GetCollection $get,
-        Path $path,
-        Response $response,
-        ResponseDispatcher $responseDispatcher,
-        RouteDispatcher $routeDispatcher,
-        Router $router
+        EventManager $eventManager
     ) {
         if (Context::isCli()) {
             throw new Exception('Application cannot be used in CLI context.');
         }
 
         $this->container = $container;
-        $this->config = $config;
         $this->eventManager = $eventManager;
-        $this->get = $get;
-        $this->path = $path;
-        $this->response = $response;
-        $this->responseDispatcher = $responseDispatcher;
-        $this->routeDispatcher = $routeDispatcher;
-        $this->router = $router;
-
-        $this->request = RequestFactory::createFromServer();
-
-        $container->store($this->request);
-
-        // Tools requires the Request, so we build this one manually
-        $this->tools = $container->get(Tools::class);
     }
 
     public function run(): void
@@ -147,6 +126,9 @@ class Application
 
         $this->startPluginsBeforeBoot();
 
+        // We do this after the plugins to allow plugins to change dependencies before they're used.
+        $this->instantiateDependencies();
+
         if ($this->config->get('parable.debug.enabled') === true) {
             $this->enableErrorReporting();
         } else {
@@ -178,6 +160,24 @@ class Application
     public function hasBooted(): bool
     {
         return $this->hasBooted;
+    }
+
+    protected function instantiateDependencies(): void
+    {
+        $this->config = $this->container->get(Config::class);
+        $this->get = $this->container->get(GetCollection::class);;
+        $this->path = $this->container->get(Path::class);;
+        $this->response = $this->container->get(Response::class);;
+        $this->responseDispatcher = $this->container->get(ResponseDispatcher::class);;
+        $this->routeDispatcher = $this->container->get(RouteDispatcher::class);;
+        $this->router = $this->container->get(Router::class);;
+
+        $this->request = RequestFactory::createFromServer();
+
+        $this->container->store($this->request);
+
+        // Tools requires the Request, so we build this one manually
+        $this->tools = $this->container->get(Tools::class);
     }
 
     protected function startPluginsBeforeBoot(): void
