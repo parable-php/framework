@@ -84,11 +84,11 @@ class InstallCommand extends Command
 
         $namespace = $this->askUserAQuestionWithDefault(
             'What is your project\'s root namespace?',
-            $upgrading ? $existingRootNamespace : 'Project'
+            $existingRootNamespace ?? 'Project'
         );
         $sourceDir = $this->askUserAQuestionWithDefault(
             'What source directory do you want to use?',
-            $upgrading ? $existingSourceDir : 'src'
+            $existingSourceDir ?? 'src'
         );
         $publicDir = $this->askUserAQuestionWithDefault(
             'What public directory do you want to use?',

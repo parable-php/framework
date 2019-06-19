@@ -9,7 +9,7 @@ use Parable\Framework\Config;
 use Parable\Framework\Context;
 use Parable\Framework\EventTriggers;
 use Parable\Framework\Exception;
-use Parable\Framework\Path;
+use Parable\Framework\Http\RouteDispatcher;
 use Parable\Http\HeaderSender;
 use Parable\Http\Response;
 use Parable\Orm\Database;
@@ -118,27 +118,52 @@ class ApplicationTest extends AbstractTestCase
 
     public function testApplicationDependenciesCanBeChangedBeforeBoot(): void
     {
-        $application = new class (...$this->container->getDependenciesFor(Application::class)) extends Application {
-            public function path(): ?Path
+        $response = $this->container->get(Response::class);
+
+        $application = new class (...$this->container->getDependenciesFor(Application::class)) extends Application
+        {
+            public function routeDispatcher()
             {
-                return $this->path;
+                return $this->routeDispatcher;
             }
         };
 
-        self::assertInstanceOf(Path::class, $this->container->get(Path::class));
-        self::assertContains('parable/tests', $this->container->get(Path::class)->getRoot());
+        $preexistingRouteDispatcher = $this->container->get(RouteDispatcher::class);
+
+        self::assertInstanceOf(RouteDispatcher::class, $preexistingRouteDispatcher);
+
+        $preexistingRouteDispatcher->dispatch(new Route(['GET'], 'test', '/', function () {
+            echo 'yo';
+        }));
+
+        self::assertSame('yo', $response->getBody());
 
         // Application's 'dependencies' are not yet set.
-        self::assertNull($application->path());
+        self::assertNull($application->routeDispatcher());
 
-        $path = new Path('stuff/here');
-        $this->container->store($path);
+        $fakeRouteDispatcher = new class ($response)
+        {
+            private $response;
+
+            public function __construct(Response $response)
+            {
+                $this->response = $response;
+            }
+
+            public function dispatch(): void
+            {
+                $this->response->setBody('this is not a real route dispatcher');
+            }
+        };
+        $this->container->store($fakeRouteDispatcher, RouteDispatcher::class);
 
         $application->boot();
 
-        self::assertInstanceOf(Path::class, $application->path());
-        self::assertNotContains('parable/tests', $application->path()->getRoot());
-        self::assertSame('stuff/here/what', $application->path()->getPath('what'));
+        $application->routeDispatcher()->dispatch(new Route(['GET'], 'test', '/', function () {
+            echo 'yo';
+        }));
+
+        self::assertSame('this is not a real route dispatcher', $response->getBody());
     }
 
     public function testApplicationRunWithoutAnythingSetUpWillHandleAs404(): void

@@ -84,14 +84,31 @@ class Application
 
     public function __construct(
         Container $container,
-        EventManager $eventManager
+        Config $config,
+        EventManager $eventManager,
+        GetCollection $get,
+        Path $path,
+        Response $response,
+        Router $router
     ) {
         if (Context::isCli()) {
             throw new Exception('Application cannot be used in CLI context.');
         }
 
         $this->container = $container;
+        $this->config = $config;
         $this->eventManager = $eventManager;
+        $this->get = $get;
+        $this->path = $path;
+        $this->response = $response;
+        $this->router = $router;
+
+        // Create request from server & store it
+        $this->request = RequestFactory::createFromServer();
+        $this->container->store($this->request);
+
+        // Tools requires the Request to be available, so we build this one manually
+        $this->tools = $this->container->get(Tools::class);
     }
 
     public function run(): void
@@ -126,8 +143,8 @@ class Application
 
         $this->startPluginsBeforeBoot();
 
-        // We do this after the plugins to allow plugins to change dependencies before they're used.
-        $this->instantiateDependencies();
+        // We do this after the plugins to allow plugins to change (sub-)dependencies before they're used
+        $this->instantiateDelayedDependencies();
 
         if ($this->config->get('parable.debug.enabled') === true) {
             $this->enableErrorReporting();
@@ -162,22 +179,14 @@ class Application
         return $this->hasBooted;
     }
 
-    protected function instantiateDependencies(): void
+    /**
+     * These dependencies have dependencies that cannot be changed upon instantiation.
+     * To allow plugins to do preemptive replacement, we need to delay instantiation.
+     */
+    protected function instantiateDelayedDependencies(): void
     {
-        $this->config = $this->container->get(Config::class);
-        $this->get = $this->container->get(GetCollection::class);;
-        $this->path = $this->container->get(Path::class);;
-        $this->response = $this->container->get(Response::class);;
-        $this->responseDispatcher = $this->container->get(ResponseDispatcher::class);;
-        $this->routeDispatcher = $this->container->get(RouteDispatcher::class);;
-        $this->router = $this->container->get(Router::class);;
-
-        $this->request = RequestFactory::createFromServer();
-
-        $this->container->store($this->request);
-
-        // Tools requires the Request, so we build this one manually
-        $this->tools = $this->container->get(Tools::class);
+        $this->responseDispatcher = $this->container->get(ResponseDispatcher::class);
+        $this->routeDispatcher = $this->container->get(RouteDispatcher::class);
     }
 
     protected function startPluginsBeforeBoot(): void
