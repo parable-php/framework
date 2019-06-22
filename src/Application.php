@@ -143,9 +143,6 @@ class Application
 
         $this->startPluginsBeforeBoot();
 
-        // We do this after the plugins to allow plugins to change (sub-)dependencies before they're used
-        $this->instantiateDelayedDependencies();
-
         if ($this->config->get('parable.debug.enabled') === true) {
             $this->enableErrorReporting();
         } else {
@@ -169,6 +166,8 @@ class Application
 
         $this->startPluginsAfterBoot();
 
+        $this->instantiateDispatchers();
+
         $this->hasBooted = true;
 
         $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
@@ -183,7 +182,7 @@ class Application
      * These dependencies have dependencies that cannot be changed upon instantiation.
      * To allow plugins to do preemptive replacement, we need to delay instantiation.
      */
-    protected function instantiateDelayedDependencies(): void
+    protected function instantiateDispatchers(): void
     {
         $this->responseDispatcher = $this->container->get(ResponseDispatcher::class);
         $this->routeDispatcher = $this->container->get(RouteDispatcher::class);
