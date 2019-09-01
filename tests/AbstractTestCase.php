@@ -6,17 +6,12 @@ use Parable\Di\Container;
 use Parable\Framework\Context;
 use Parable\Framework\Path;
 
-class AbstractTestCase extends \PHPUnit\Framework\TestCase
+abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Container
      */
     protected $container;
-
-    /**
-     * @var int
-     */
-    protected $startingOutputBufferLevel;
 
     public function setUp()
     {

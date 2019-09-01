@@ -52,6 +52,8 @@ class PluginManagerTest extends AbstractTestCase
     {
         $this->pluginManager::addPlugin('now', GenericPluginImplementation::class);
 
+        self::assertFalse($this->container->has(Config::class));
+
         $this->pluginManager::startPlugins('now', $this->container);
 
         self::assertTrue($this->container->has(Config::class));
@@ -68,6 +70,8 @@ class PluginManagerTest extends AbstractTestCase
     public function testPluginManagerHandlesCliPlugins(): void
     {
         $this->pluginManager::addPlugin('now', CliPluginImplementation::class);
+
+        self::assertFalse($this->container->has(Config::class));
 
         $this->pluginManager::startPlugins('now', $this->container);
 
@@ -88,6 +92,8 @@ class PluginManagerTest extends AbstractTestCase
         Context::setIsCliForTest(false);
 
         $this->pluginManager::addPlugin('now', HttpPluginImplementation::class);
+
+        self::assertFalse($this->container->has(Config::class));
 
         $this->pluginManager::startPlugins('now', $this->container);
 
