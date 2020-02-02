@@ -13,8 +13,6 @@
 use Parable\Framework\Plugins\PluginManager;
 use ###ROOT_NAMESPACE###\Boot;
 
-require 'vendor/autoload.php';
-
 foreach (Boot::getPluginsToRegister() as $timeSlot => $pluginClassNames) {
     foreach ($pluginClassNames as $pluginClassName) {
         PluginManager::addPlugin(
