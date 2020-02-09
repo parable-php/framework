@@ -58,12 +58,16 @@ class Tools
 
     public function buildUrl(string $path): string
     {
-        return rtrim($this->getBaseUrl(), '/') . '/' . trim($path, '/');
+        return sprintf(
+            '%s/%s',
+            rtrim($this->getBaseUrl(), '/'),
+            trim($path, '/')
+        );
     }
 
     public function redirect(string $target): void
     {
-        HeaderSender::send('location: ' . $target);
+        HeaderSender::send(sprintf('location: %s', $target));
 
         $this->terminate(0);
     }
@@ -94,7 +98,11 @@ class Tools
         $url = $route->getUrl();
 
         foreach ($parameters as $param => $value) {
-            $url = str_replace('{' . $param . '}', $value, $url);
+            $url = str_replace(
+                sprintf('{%s}', $param),
+                $value,
+                $url
+            );
         }
 
         return $this->buildUrl($url);

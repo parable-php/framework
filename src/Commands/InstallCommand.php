@@ -30,7 +30,7 @@ class InstallCommand extends Command
     public function run(): void
     {
         $this->output->writelns([
-            'Welcome to the installation of Parable ' . Application::VERSION . '!',
+            sprintf('Welcome to the installation of Parable %s!', Application::VERSION),
             '',
             'This will install Parable in a basic form. If you\'ve previously run this command,',
             'this may overwrite existing files if you choose the same public directory.',
@@ -62,8 +62,8 @@ class InstallCommand extends Command
 
             $existingRootNamespace = trim($existingRootNamespace, '\\');
 
-            $this->output->writeln('  detected root namespace:     <cyan>' . $existingRootNamespace . '</cyan>');
-            $this->output->writeln('  detected source directory:   <cyan>' . $existingSourceDir . '</cyan>');
+            $this->output->writeln(sprintf('  detected root namespace:     <cyan>%s</cyan>', $existingRootNamespace));
+            $this->output->writeln(sprintf('  detected source namespace:   <cyan>%s</cyan>', $existingSourceDir));
 
             $upgrading = $useExisting = $this->askUserToContinue(
                 'Do you want to use these? (No will revert to assuming fresh install)'
@@ -134,7 +134,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $this->output->write('Updating composer.json with autoload for ' . $namespace . '... ');
+        $this->output->write(sprintf('Updating composer.json with autoload for %s... ', $namespace));
 
         $composerJson = file_get_contents(BASEDIR . '/composer.json');
         $composerArray = json_decode($composerJson, true);

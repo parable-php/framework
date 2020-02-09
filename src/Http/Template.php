@@ -117,7 +117,11 @@ class Template
             return $templatePath;
         }
 
-        return rtrim($this->templateRoot, '/') . '/' . $templatePath;
+        return sprintf(
+            '%s/%s',
+            rtrim($this->templateRoot, '/'),
+            $templatePath
+        );
     }
 
     public function __get(string $name)
@@ -133,9 +137,11 @@ class Template
         $matchedProperty = null;
 
         foreach ($annotatedProperties as $annotatedProperty) {
-            if (strpos($annotatedProperty, '$' . $name) !== false) {
+            $nameMatch = '$' . $name;
+
+            if (strpos($annotatedProperty, $nameMatch) !== false) {
                 $matchedProperty = str_replace(' * @property-read ', '', $annotatedProperty);
-                $matchedProperty = str_replace('$' . $name, '', $matchedProperty);
+                $matchedProperty = str_replace($nameMatch, '', $matchedProperty);
                 break;
             }
         }

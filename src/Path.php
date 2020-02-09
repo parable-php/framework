@@ -21,6 +21,10 @@ class Path
 
     public function getPath(string $path): string
     {
-        return $this->root . '/' . trim($path, '/');
+        return sprintf(
+            '%s/%s',
+            $this->root,
+            trim($path, '/')
+        );
     }
 }
