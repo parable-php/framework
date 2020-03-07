@@ -16,6 +16,7 @@ class Boot
     {
         return [
             Application::PLUGIN_BEFORE_BOOT => [
+                ExamplePlugin::class,
             ],
             Application::PLUGIN_AFTER_BOOT => [
             ],
