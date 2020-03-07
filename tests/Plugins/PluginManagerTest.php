@@ -9,7 +9,7 @@ use Parable\Framework\Exception;
 use Parable\Framework\Plugins\PluginManager;
 use Parable\Framework\Tests\AbstractTestCase;
 use Parable\Framework\Tests\Classes\CliPluginImplementation;
-use Parable\Framework\Tests\Classes\GenericPluginImplementation;
+use Parable\Framework\Tests\Classes\PluginImplementation;
 use Parable\Framework\Tests\Classes\HttpPluginImplementation;
 use Parable\Routing\Router;
 
@@ -28,7 +28,7 @@ class PluginManagerTest extends AbstractTestCase
         {
             public static function clearPlugins(): void
             {
-                self::$pluginClassNames = [];
+                static::$pluginClassNames = [];
             }
         };
 
@@ -48,9 +48,9 @@ class PluginManagerTest extends AbstractTestCase
         self::assertFalse($this->container->has(Config::class));
     }
 
-    public function testPluginManagerHandlesGenericPlugins(): void
+    public function testPluginManagerHandlesPlugins(): void
     {
-        $this->pluginManager::addPlugin('now', GenericPluginImplementation::class);
+        $this->pluginManager::addPlugin('now', PluginImplementation::class);
 
         self::assertFalse($this->container->has(Config::class));
 
@@ -67,53 +67,9 @@ class PluginManagerTest extends AbstractTestCase
         self::assertInstanceOf(Config::class, $config);
     }
 
-    public function testPluginManagerHandlesCliPlugins(): void
-    {
-        $this->pluginManager::addPlugin('now', CliPluginImplementation::class);
-
-        self::assertFalse($this->container->has(Config::class));
-
-        $this->pluginManager::startPlugins('now', $this->container);
-
-        self::assertTrue($this->container->has(Config::class));
-
-        $dependencies = $this->container->get(Config::class)->get('dependencies');
-
-        self::assertCount(2, $dependencies);
-
-        [$config, $application] = $dependencies;
-
-        self::assertInstanceOf(Config::class, $config);
-        self::assertInstanceOf(ConsoleApplication::class, $application);
-    }
-
-    public function testPluginManagerHandlesHttpPlugins(): void
-    {
-        Context::setIsCliForTest(false);
-
-        $this->pluginManager::addPlugin('now', HttpPluginImplementation::class);
-
-        self::assertFalse($this->container->has(Config::class));
-
-        $this->pluginManager::startPlugins('now', $this->container);
-
-        self::assertTrue($this->container->has(Config::class));
-
-        $dependencies = $this->container->get(Config::class)->get('dependencies');
-
-        self::assertCount(2, $dependencies);
-
-        [$config, $router] = $dependencies;
-
-        self::assertInstanceOf(Config::class, $config);
-        self::assertInstanceOf(Router::class, $router);
-
-        Context::clearIsCliForTest();
-    }
-
     public function testPluginWithoutValidInterfaceIsNotAccepted(): void
     {
-        $this->expectExceptionMessage("Plugin 'Parable\Framework\Config' does not implement a valid plugin interface (Parable\Framework\Plugins\CliPluginInterface, Parable\Framework\Plugins\GenericPluginInterface, Parable\Framework\Plugins\HttpPluginInterface)");
+        $this->expectExceptionMessage("Plugin 'Parable\Framework\Config' does not implement PluginInterface");
         $this->expectException(Exception::class);
 
         $this->pluginManager::addPlugin('now', Config::class);

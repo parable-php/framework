@@ -1,0 +1,32 @@
+<?php
+
+namespace ###ROOT_NAMESPACE###;
+
+use Parable\Framework\Plugins\PluginInterface;
+use Parable\Routing\Router;
+
+class ExamplePlugin implements PluginInterface
+{
+    /**
+     * @var Router
+     */
+    protected $router;
+
+    public function __construct(Router $router)
+    {
+        $this->router = $router;
+    }
+
+    public function run(): void
+    {
+        // Set up your config and routing here and Parable handles the rest.
+        $this->router->add(
+            ['GET'],
+            'welcome',
+            '/',
+            function () {
+            },
+            ['template' => '###SOURCE_DIRECTORY###/welcome.phtml']
+        );
+    }
+}

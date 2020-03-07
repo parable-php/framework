@@ -139,7 +139,6 @@ class InstallCommand extends Command
         $composerJson = file_get_contents(BASEDIR . '/composer.json');
         $composerArray = json_decode($composerJson, true);
 
-
         if (!array_key_exists('autoload', $composerArray)) {
             $composerArray['autoload'] = [];
         }
@@ -178,10 +177,13 @@ class InstallCommand extends Command
 
         if ($upgrading === false) {
             if ($this->askUserToContinue(
-                'Do you want to install the example files (Boot.php, welcome.phtml)? (say no if you\'re upgrading)',
+                'Do you want to install the example files (Boot.php, ExamplePlugin.php, welcome.phtml)? (say no if you\'re upgrading)',
                 true
             )) {
                 if (!$this->copyTemplateFile('Boot.php', $sourceDir, $namespace, $sourceDir, $publicDir)) {
+                    return;
+                }
+                if (!$this->copyTemplateFile('ExamplePlugin.php', $sourceDir, $namespace, $sourceDir, $publicDir)) {
                     return;
                 }
                 if (!$this->copyTemplateFile('welcome.phtml', $sourceDir, $namespace, $sourceDir, $publicDir)) {

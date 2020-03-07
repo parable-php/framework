@@ -3,17 +3,12 @@
 namespace ###ROOT_NAMESPACE###;
 
 use Parable\Framework\Application;
-use Parable\Framework\Config;
-use Parable\Framework\Plugins\HttpPluginInterface;
-use Parable\Routing\Router;
 
-class Boot implements HttpPluginInterface
+class Boot
 {
     /**
-     * Normally this would not contain this class itself but only actual plugins in a
-     * ###ROOT_NAMESPACE###/Plugins/ namespace, for example.
-     *
-     * The key is the time slot the plugins will be registered in, the values the class names.
+     * The key is the time slot the plugins will be registered and executed in,
+     * the values the class names.
      *
      * @return string[][]
      */
@@ -21,21 +16,9 @@ class Boot implements HttpPluginInterface
     {
         return [
             Application::PLUGIN_BEFORE_BOOT => [
-                self::class,
             ],
             Application::PLUGIN_AFTER_BOOT => [
             ],
         ];
-    }
-
-    /**
-     * Normally this would be in a separate class, but for demo purposes this works.
-     */
-    public function configure(Config $config, Router $router): void
-    {
-        // Set up your config and routing here and Parable handles the rest.
-        $router->add(
-            ['GET'], 'welcome', '/', function() {}, ['template' => '###SOURCE_DIRECTORY###/welcome.phtml']
-        );
     }
 }

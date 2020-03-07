@@ -4,12 +4,30 @@ namespace Parable\Framework\Tests\Classes;
 
 use Parable\Framework\Config;
 use Parable\Framework\ConsoleApplication;
-use Parable\Framework\Plugins\CliPluginInterface;
+use Parable\Framework\Plugins\PluginInterface;
 
-class CliPluginImplementation implements CliPluginInterface
+class CliPluginImplementation implements PluginInterface
 {
-    public function configure(Config $config, ConsoleApplication $application): void
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var ConsoleApplication
+     */
+    protected $application;
+
+    public function __construct(
+        Config $config,
+        ConsoleApplication $application
+    ) {
+        $this->config = $config;
+        $this->application = $application;
+    }
+
+    public function run(): void
     {
-        $config->set('dependencies', [$config, $application]);
+        $this->config->set('dependencies', [$this->config, $this->application]);
     }
 }

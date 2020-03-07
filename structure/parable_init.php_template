@@ -13,10 +13,10 @@
 use Parable\Framework\Plugins\PluginManager;
 use ###ROOT_NAMESPACE###\Boot;
 
-foreach (Boot::getPluginsToRegister() as $timeSlot => $pluginClassNames) {
+foreach (Boot::getPluginsToRegister() as $trigger => $pluginClassNames) {
     foreach ($pluginClassNames as $pluginClassName) {
         PluginManager::addPlugin(
-            $timeSlot,
+            $trigger,
             $pluginClassName
         );
     }
