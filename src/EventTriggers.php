@@ -13,8 +13,6 @@ class EventTriggers
     public const APPLICATION_RUN_AFTER = 'parable_run_after';
     public const APPLICATION_ROUTE_MATCH_FOUND = 'parable_route_match_found';
     public const APPLICATION_ROUTE_MATCH_NOT_FOUND = 'parable_route_match_not_found';
-    public const APPLICATION_LOAD_CONFIG_BEFORE = 'parable_load_config_before';
-    public const APPLICATION_LOAD_CONFIG_AFTER = 'parable_load_config_after';
     public const APPLICATION_INIT_DATABASE_BEFORE = 'parable_init_database_before';
     public const APPLICATION_INIT_DATABASE_AFTER = 'parable_init_database_after';
     public const APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE = 'parable_set_default_timezone_before';
