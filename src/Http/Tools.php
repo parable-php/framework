@@ -6,6 +6,7 @@ use Parable\Framework\Exception;
 use Parable\GetSet\GetCollection;
 use Parable\Http\HeaderSender;
 use Parable\Http\Request;
+use Parable\Http\Uri;
 use Parable\Routing\Route;
 use Parable\Routing\Router;
 
@@ -36,33 +37,18 @@ class Tools
         $this->router = $router;
     }
 
-    public function getBaseUrl(): string
+    public function getUri(): Uri
     {
-        return trim(
-            str_replace($this->getCurrentRelativeUrl(), '/', $this->request->getUri()->getUriString()),
-            '/'
-        );
-    }
-
-    public function getCurrentRelativeUrl(): string
-    {
-        $currentRelativeUrl = $this->get->get('PARABLE_REDIRECT_URL');
-
-        return $currentRelativeUrl !== null ? (string)$currentRelativeUrl : '/';
-    }
-
-    public function getCurrentUrl(): string
-    {
-        return $this->request->getUri()->getUriString();
+        return $this->request->getUri();
     }
 
     public function buildUrl(string $path): string
     {
-        return sprintf(
-            '%s/%s',
-            rtrim($this->getBaseUrl(), '/'),
-            trim($path, '/')
-        );
+        return $this->getUri()
+            ->withFragment(null)
+            ->withQuery(null)
+            ->withPath($path)
+            ->getUriString();
     }
 
     public function redirect(string $target): void
@@ -74,7 +60,7 @@ class Tools
 
     public function redirectToSelf(): void
     {
-        $this->redirect($this->getCurrentUrl());
+        $this->redirect($this->getUri()->getUriString());
     }
 
     public function redirectToRoute(Route $route, array $parameters = []): void
