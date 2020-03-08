@@ -19,15 +19,26 @@ class ToolsTest extends AbstractTestCase
 
     private function setUpRequestAndToolsForUrl(string $baseUrl, string $relativePath): void
     {
-        $this->container->store(new Request('GET', $baseUrl . '/' . $relativePath));
+        $request = new Request('GET', $baseUrl . '/' . $relativePath);
 
+        $this->container->store($request);
+
+        $redirectUrl = trim(str_replace(
+            $baseUrl,
+            '',
+            $request->getUri()
+                ->withFragment(null)
+                ->withQuery(null)
+                ->getUriString()
+        ), '/');
+
+        // PARABLE_REDIRECT_URL is always without fragments or query strings
         $this->container->get(GetCollection::class)->set(
             'PARABLE_REDIRECT_URL',
-            $relativePath
+            $redirectUrl
         );
 
-        $this->tools = new class (...$this->container->getDependenciesFor(Tools::class)) extends Tools
-        {
+        $this->tools = new class (...$this->container->getDependenciesFor(Tools::class)) extends Tools {
             public function terminate(int $exitCode): void
             {
                 // Do nothing here
@@ -94,7 +105,8 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'blah/blah',
-            function () {}
+            function () {
+            }
         ));
 
         self::assertContains('location: https://test.dev/blah/blah', HeaderSender::list());
@@ -110,7 +122,8 @@ class ToolsTest extends AbstractTestCase
                 ['GET'],
                 'redirect-route',
                 'blah/blah',
-                function () {}
+                function () {
+                }
             ))
         );
     }
@@ -125,7 +138,8 @@ class ToolsTest extends AbstractTestCase
                 ['GET'],
                 'redirect-route',
                 'parameters/{no1}/{no2}',
-                function () {}
+                function () {
+                }
             ), [
                 'no1' => 'hello',
                 'no2' => 'world',
@@ -141,7 +155,8 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'blah/blah',
-            function () {}
+            function () {
+            }
         );
 
         self::assertSame(
@@ -158,7 +173,8 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'parameters/{no1}/{no2}',
-            function () {}
+            function () {
+            }
         );
 
         self::assertSame(
@@ -186,6 +202,8 @@ class ToolsTest extends AbstractTestCase
     public function testBuildUrlDoesNotCareAboutFragmentsOrQuery(): void
     {
         $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home/?query=1#fragment');
+
+        self::assertSame('https://test.dev', $this->tools->getBaseUrl());
 
         self::assertSame(
             'https://test.dev/test/path#other-fragment=1',

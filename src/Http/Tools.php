@@ -38,19 +38,21 @@ class Tools
 
     public function getBaseUrl(): string
     {
-        return trim(
-            str_replace(
-                $this->getCurrentRelativeUrl(),
-                '/',
-                $this->request->getUri()->getUriString()),
-            '/'
+        $baseUri = $this->request->getUri()
+            ->withFragment(null)
+            ->withQuery(null);
+
+        return $this->replaceAndClean(
+            $this->getCurrentRelativeUrl(),
+            '/',
+            $baseUri->getUriString()
         );
     }
 
     public function getCurrentRelativeUrl(): string
     {
         return $this->get->get('PARABLE_REDIRECT_URL') !== null
-            ? (string)$this->get->get('PARABLE_REDIRECT_URL')
+            ? $this->clean((string)$this->get->get('PARABLE_REDIRECT_URL'))
             : '/';
     }
 
@@ -101,7 +103,7 @@ class Tools
         $url = $route->getUrl();
 
         foreach ($parameters as $param => $value) {
-            $url = str_replace(
+            $url = $this->replaceAndClean(
                 sprintf('{%s}', $param),
                 $value,
                 $url
@@ -114,5 +116,19 @@ class Tools
     public function terminate(int $exitCode): void
     {
         exit($exitCode); // @codeCoverageIgnore
+    }
+
+    protected function replaceAndClean(string $search, string $replace, string $string): string
+    {
+        return $this->clean(str_replace(
+            $search,
+            $replace,
+            $string
+        ));
+    }
+
+    protected function clean(string $string): string
+    {
+        return trim($string, '/');
     }
 }
