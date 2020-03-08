@@ -12,14 +12,19 @@ use Parable\Routing\Router;
 
 class ToolsTest extends AbstractTestCase
 {
+    /**
+     * @var Tools
+     */
     protected $tools;
 
-    public function setUp()
+    private function setUpRequestAndToolsForUrl(string $baseUrl, string $relativePath): void
     {
-        parent::setUp();
+        $this->container->store(new Request('GET', $baseUrl . '/' . $relativePath));
 
-        $this->container->get(GetCollection::class)->set('PARABLE_REDIRECT_URL', 'page/home');
-        $this->container->store(new Request('GET', 'https://test.dev/page/home'));
+        $this->container->get(GetCollection::class)->set(
+            'PARABLE_REDIRECT_URL',
+            $relativePath
+        );
 
         $this->tools = new class (...$this->container->getDependenciesFor(Tools::class)) extends Tools
         {
@@ -30,8 +35,19 @@ class ToolsTest extends AbstractTestCase
         };
     }
 
+    public function testProjectInSubfolderHasBaseUrlRecognizedProperly(): void
+    {
+        $this->setUpRequestAndToolsForUrl('https://test.dev/project', 'page/home');
+
+        self::assertSame('https://test.dev/project', $this->tools->getBaseUrl());
+        self::assertSame('https://test.dev/project/page/home', $this->tools->getCurrentUrl());
+        self::assertSame('page/home', $this->tools->getCurrentRelativeUrl());
+    }
+
     public function testGetBaseCurrentAndCurrentRelativeUrl(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         self::assertSame('https://test.dev', $this->tools->getBaseUrl());
         self::assertSame('https://test.dev/page/home', $this->tools->getCurrentUrl());
         self::assertSame('page/home', $this->tools->getCurrentRelativeUrl());
@@ -39,11 +55,15 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildUrl(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         self::assertSame('https://test.dev/yo/dog', $this->tools->buildUrl('yo/dog'));
     }
 
     public function testRedirect(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         HeaderSender::setTestMode(true);
 
         $this->tools->redirect('https://github.com');
@@ -53,6 +73,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testRedirectToSelf(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         HeaderSender::setTestMode(true);
 
         self::assertSame('https://test.dev/page/home', $this->tools->getCurrentUrl());
@@ -64,6 +86,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testRedirectToRoute(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         HeaderSender::setTestMode(true);
 
         $this->tools->redirectToRoute(new Route(
@@ -78,6 +102,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildUrlFromRoute(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         self::assertSame(
             'https://test.dev/blah/blah',
             $this->tools->buildUrlFromRoute(new Route(
@@ -91,6 +117,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildUrlWithParametersFromRoute(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         self::assertSame(
             'https://test.dev/parameters/hello/world',
             $this->tools->buildUrlFromRoute(new Route(
@@ -107,6 +135,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildFromRouteName(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         $this->container->get(Router::class)->add(
             ['GET'],
             'redirect-route',
@@ -122,6 +152,8 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildFromRouteNameWithParameters(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         $this->container->get(Router::class)->add(
             ['GET'],
             'redirect-route',
@@ -143,9 +175,21 @@ class ToolsTest extends AbstractTestCase
 
     public function testBuildFromRouteNameThrowsExceptionForUnknownRoute(): void
     {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
+
         $this->expectExceptionMessage("Could not find route named 'nope'");
         $this->expectException(Exception::class);
 
         $this->tools->buildUrlFromRouteName('nope');
+    }
+
+    public function testBuildUrlDoesNotCareAboutFragmentsOrQuery(): void
+    {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home/?query=1#fragment');
+
+        self::assertSame(
+            'https://test.dev/test/path#other-fragment=1',
+            $this->tools->buildUrl('test/path#other-fragment=1')
+        );
     }
 }

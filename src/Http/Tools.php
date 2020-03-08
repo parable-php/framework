@@ -39,16 +39,19 @@ class Tools
     public function getBaseUrl(): string
     {
         return trim(
-            str_replace($this->getCurrentRelativeUrl(), '/', $this->request->getUri()->getUriString()),
+            str_replace(
+                $this->getCurrentRelativeUrl(),
+                '/',
+                $this->request->getUri()->getUriString()),
             '/'
         );
     }
 
     public function getCurrentRelativeUrl(): string
     {
-        $currentRelativeUrl = $this->get->get('PARABLE_REDIRECT_URL');
-
-        return $currentRelativeUrl !== null ? (string)$currentRelativeUrl : '/';
+        return $this->get->get('PARABLE_REDIRECT_URL') !== null
+            ? (string)$this->get->get('PARABLE_REDIRECT_URL')
+            : '/';
     }
 
     public function getCurrentUrl(): string
