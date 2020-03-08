@@ -260,7 +260,7 @@ class Application
 
     protected function matchRoute(): ?Route
     {
-        $currentRelativeUrl = $this->request->getUri()->getUriRestString();
+        $currentRelativeUrl = $this->tools->getCurrentRelativeUrl();
 
         $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_BEFORE, $currentRelativeUrl);
 
