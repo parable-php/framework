@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 use Parable\Di\Container;
 use Parable\Framework\ConsoleApplication;
 
