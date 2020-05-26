@@ -32,15 +32,19 @@ class DatabaseFactory
             $config->get('parable.database') ?? []
         );
 
-        if ($config->get('parable.database.type') === 0) {
+        $databaseType = $config->get('parable.database.type');
+
+        if ($databaseType === Database::TYPE_MYSQL) {
             return $this->createMySqlDatabaseFromConfigValues($configValuesMerged);
-        } elseif ($config->get('parable.database.type') === 1) {
+        }
+
+        if ($databaseType === Database::TYPE_SQLITE) {
             return $this->createSqliteDatabaseFromConfigValues($configValuesMerged);
         }
 
         throw new Exception(sprintf(
             'Unknown database type: %s.',
-            $config->get('parable.database.type')
+            $databaseType
         ));
     }
 
