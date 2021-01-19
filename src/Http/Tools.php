@@ -51,6 +51,10 @@ class Tools
 
     public function getCurrentRelativeUrl(): string
     {
+        if (PHP_SAPI === 'cli-server') {
+            $_GET['PARABLE_REDIRECT_URL'] = $_SERVER['PATH_INFO'] ?? '';
+        }
+
         return $this->get->get('PARABLE_REDIRECT_URL') !== null
             ? $this->clean((string)$this->get->get('PARABLE_REDIRECT_URL'))
             : '/';
