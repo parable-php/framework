@@ -9,15 +9,15 @@ use Parable\Console\Output;
 
 class ServerCommand extends Command
 {
-    /** @var string */
-    protected $name = 'server';
-
-    /** @var string */
-    protected $description = 'Run Parable with PHP\'s built-in server.';
-
     protected static ?string $public;
     protected static ?int $port;
-    protected static Output $outputStatic;
+    protected static ?Output $outputStatic;
+
+    public function __construct()
+    {
+        $this->setName('server');
+        $this->setDescription('Run Parable with PHP\'s built-in server.');
+    }
 
     public function run(): void
     {

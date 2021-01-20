@@ -8,17 +8,11 @@ use Parable\Framework\Path;
 
 class InstallCommand extends Command
 {
-    /** @var string */
-    protected $name = 'install';
-
-    /** @var string */
-    protected $description = 'Install Parable.';
-
-    protected Path $path;
-
-    public function __construct(Path $path)
-    {
-        $this->path = $path;
+    public function __construct(
+        protected Path $path
+    ) {
+        $this->setName('install');
+        $this->setDescription('Install Parable.');
     }
 
     public function run(): void
