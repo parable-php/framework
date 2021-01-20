@@ -18,17 +18,11 @@ use Parable\Routing\Router;
 
 class ApplicationTest extends AbstractTestCase
 {
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected Config $config;
 
-    /**
-     * @var array
-     */
-    protected $triggeredEvents = [];
+    protected array $triggeredEvents = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -52,7 +46,7 @@ class ApplicationTest extends AbstractTestCase
         $_SERVER['HTTP_HOST'] = 'test.dev';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -122,7 +116,7 @@ class ApplicationTest extends AbstractTestCase
 
         $application = new class (...$this->container->getDependenciesFor(Application::class)) extends Application
         {
-            public function routeDispatcher()
+            public function routeDispatcher(): ?RouteDispatcher
             {
                 return $this->routeDispatcher;
             }
@@ -132,7 +126,7 @@ class ApplicationTest extends AbstractTestCase
 
         self::assertInstanceOf(RouteDispatcher::class, $preexistingRouteDispatcher);
 
-        $preexistingRouteDispatcher->dispatch(new Route(['GET'], 'test', '/', function () {
+        $preexistingRouteDispatcher->dispatch(new Route(['GET'], 'test', '/', static function () {
             echo 'yo';
         }));
 
@@ -141,16 +135,16 @@ class ApplicationTest extends AbstractTestCase
         // Application's 'dependencies' are not yet set.
         self::assertNull($application->routeDispatcher());
 
-        $fakeRouteDispatcher = new class ($response)
+        $fakeRouteDispatcher = new class ($response) extends RouteDispatcher
         {
-            private $response;
+            protected Response $response;
 
             public function __construct(Response $response)
             {
                 $this->response = $response;
             }
 
-            public function dispatch(): void
+            public function dispatch(Route $route): void
             {
                 $this->response->setBody('this is not a real route dispatcher');
             }
@@ -159,7 +153,7 @@ class ApplicationTest extends AbstractTestCase
 
         $application->boot();
 
-        $application->routeDispatcher()->dispatch(new Route(['GET'], 'test', '/', function () {
+        $application->routeDispatcher()->dispatch(new Route(['GET'], 'test', '/', static function () {
             echo 'yo';
         }));
 
@@ -188,7 +182,7 @@ class ApplicationTest extends AbstractTestCase
     {
         $router = $this->container->get(Router::class);
 
-        $router->add(['GET'], 'test-index', '/', function () {
+        $router->add(['GET'], 'test-index', '/', static function () {
             echo 'test route found!';
         });
 

@@ -22,86 +22,28 @@ class Application
     public const PLUGIN_BEFORE_BOOT = 'plugin_before_boot';
     public const PLUGIN_AFTER_BOOT = 'plugin_after_boot';
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    /* Late instantiation */
+    protected Tools $tools;
+    protected Request $request;
 
-    /**
-     * @var Config
-     */
-    protected $config;
+    /* Replaceable instantiation */
+    protected ?ResponseDispatcher $responseDispatcher = null;
+    protected ?RouteDispatcher $routeDispatcher = null;
 
-    /**
-     * @var EventManager
-     */
-    protected $eventManager;
-
-    /**
-     * @var GetCollection
-     */
-    protected $get;
-
-    /**
-     * @var Path
-     */
-    protected $path;
-
-    /**
-     * @var Response
-     */
-    protected $response;
-
-    /**
-     * @var ResponseDispatcher
-     */
-    protected $responseDispatcher;
-
-    /**
-     * @var RouteDispatcher
-     */
-    protected $routeDispatcher;
-
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * @var Tools
-     */
-    protected $tools;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var bool
-     */
-    protected $hasBooted = false;
+    protected bool $hasBooted = false;
 
     public function __construct(
-        Container $container,
-        Config $config,
-        EventManager $eventManager,
-        GetCollection $get,
-        Path $path,
-        Response $response,
-        Router $router
+        protected Container $container,
+        protected Config $config,
+        protected EventManager $eventManager,
+        protected GetCollection $get,
+        protected Path $path,
+        protected Response $response,
+        protected Router $router
     ) {
         if (Context::isCli()) {
             throw new Exception('Application cannot be used in CLI context.');
         }
-
-        $this->container = $container;
-        $this->config = $config;
-        $this->eventManager = $eventManager;
-        $this->get = $get;
-        $this->path = $path;
-        $this->response = $response;
-        $this->router = $router;
 
         // Create request from server & store it
         $this->request = RequestFactory::createFromServer();

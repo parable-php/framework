@@ -7,14 +7,9 @@ use Parable\Framework\Exception;
 
 class PluginManager
 {
-    /**
-     * @var string[][]|PluginInterface[][]
-     */
-    protected static $pluginClassNames = [];
+    /** @var string[][]|PluginInterface[][] */
+    protected static array $pluginClassNames = [];
 
-    /**
-     * @param string|PluginInterface $pluginClassName
-     */
     public static function addPlugin(string $trigger, string $pluginClassName): void
     {
         self::$pluginClassNames[$trigger][] = $pluginClassName;

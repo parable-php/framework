@@ -4,7 +4,7 @@ namespace Parable\Framework;
 
 class Context
 {
-    protected static $isCli;
+    protected static ?bool $isCli;
 
     public static function isCli(): bool
     {

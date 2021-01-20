@@ -11,29 +11,11 @@ use Parable\Routing\Router;
 
 class Tools
 {
-    /**
-     * @var GetCollection
-     */
-    protected $get;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var Router
-     */
-    protected $router;
-
     public function __construct(
-        GetCollection $get,
-        Request $request,
-        Router $router
+        protected GetCollection $get,
+        protected Request $request,
+        protected Router $router
     ) {
-        $this->get = $get;
-        $this->request = $request;
-        $this->router = $router;
     }
 
     public function getBaseUrl(): string

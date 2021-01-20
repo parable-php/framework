@@ -6,31 +6,21 @@ use Parable\Console\Application;
 use Parable\Console\Commands\HelpCommand;
 use Parable\Di\Container;
 use Parable\Framework\Commands\InstallCommand;
+use Parable\Framework\Commands\ServerCommand;
 
 class ConsoleApplication
 {
-    /**
-     * @var Application
-     */
-    protected $application;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
     public function __construct(
-        Application $application,
-        Container $container
+        protected Application $application,
+        protected Container $container
     ) {
-        $this->application = $application;
-        $this->container = $container;
     }
 
     public function run(): void
     {
         $this->application->addCommandByNameAndClass('help', HelpCommand::class);
         $this->application->addCommandByNameAndClass('install', InstallCommand::class);
+        $this->application->addCommandByNameAndClass('server', ServerCommand::class);
 
         $this->application->setDefaultCommandByName('help');
 

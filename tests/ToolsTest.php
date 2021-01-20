@@ -12,9 +12,7 @@ use Parable\Routing\Router;
 
 class ToolsTest extends AbstractTestCase
 {
-    /**
-     * @var Tools
-     */
+    /** @var Tools */
     protected $tools;
 
     private function setUpRequestAndToolsForUrl(string $baseUrl, string $relativePath): void
@@ -105,8 +103,7 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'blah/blah',
-            function () {
-            }
+            fn() => null
         ));
 
         self::assertContains('location: https://test.dev/blah/blah', HeaderSender::list());
@@ -122,8 +119,7 @@ class ToolsTest extends AbstractTestCase
                 ['GET'],
                 'redirect-route',
                 'blah/blah',
-                function () {
-                }
+                fn() => null
             ))
         );
     }
@@ -138,8 +134,7 @@ class ToolsTest extends AbstractTestCase
                 ['GET'],
                 'redirect-route',
                 'parameters/{no1}/{no2}',
-                function () {
-                }
+                fn() => null
             ), [
                 'no1' => 'hello',
                 'no2' => 'world',
@@ -155,8 +150,7 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'blah/blah',
-            function () {
-            }
+            fn() => null
         );
 
         self::assertSame(
@@ -173,8 +167,7 @@ class ToolsTest extends AbstractTestCase
             ['GET'],
             'redirect-route',
             'parameters/{no1}/{no2}',
-            function () {
-            }
+            fn() => null
         );
 
         self::assertSame(

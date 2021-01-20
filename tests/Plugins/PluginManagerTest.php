@@ -20,7 +20,7 @@ class PluginManagerTest extends AbstractTestCase
      */
     protected $pluginManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

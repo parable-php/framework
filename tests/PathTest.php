@@ -6,15 +6,22 @@ use Parable\Framework\Path;
 
 class PathTest extends AbstractTestCase
 {
+    protected Path $path;
+
+    public function setUp(): void
+    {
+        $this->path = new Path();
+
+        parent::setUp();
+    }
+
     public function testBasePathInstance(): void
     {
-        $path = new Path();
-
-        self::assertSame(BASEDIR, $path->getRoot());
-        self::assertSame(BASEDIR . '/subdir', $path->getPath('subdir'));
-        self::assertSame(BASEDIR . '/subdir', $path->getPath('subdir/'));
-        self::assertSame(BASEDIR . '/subdir', $path->getPath('/subdir'));
-        self::assertSame(BASEDIR . '/subdir', $path->getPath('/subdir/'));
+        self::assertSame(BASEDIR, $this->path->getRoot());
+        self::assertSame(BASEDIR . '/subdir', $this->path->getPath('subdir'));
+        self::assertSame(BASEDIR . '/subdir', $this->path->getPath('subdir/'));
+        self::assertSame(BASEDIR . '/subdir', $this->path->getPath('/subdir'));
+        self::assertSame(BASEDIR . '/subdir', $this->path->getPath('/subdir/'));
     }
 
     public function testCustomPathInstance(): void

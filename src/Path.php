@@ -4,10 +4,7 @@ namespace Parable\Framework;
 
 class Path
 {
-    /**
-     * @var string
-     */
-    protected $root;
+    protected string $root;
 
     public function __construct(string $root = BASEDIR)
     {

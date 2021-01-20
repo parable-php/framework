@@ -6,7 +6,7 @@ use Parable\Orm\Database;
 
 class DatabaseFactory
 {
-    public function createFromConfig(Config $config): ?Database
+    public function createFromConfig(Config $config): Database
     {
         if ($config->get('parable.database.type') !== null) {
             return $this->createDatabaseFromConfig($config);

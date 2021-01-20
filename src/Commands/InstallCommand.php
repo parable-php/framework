@@ -8,19 +8,13 @@ use Parable\Framework\Path;
 
 class InstallCommand extends Command
 {
-    /**
-     * @var Path
-     */
-    protected $path;
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $name = 'install';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $description = 'Install Parable.';
+
+    protected Path $path;
 
     public function __construct(Path $path)
     {
@@ -42,7 +36,7 @@ class InstallCommand extends Command
         }
 
         $composerJson = file_get_contents(BASEDIR . '/composer.json');
-        $composerArray = json_decode($composerJson, true);
+        $composerArray = json_decode($composerJson, true, 512, JSON_THROW_ON_ERROR);
 
         $rootNamespaceAndSourceDir = $composerArray['autoload']['psr-4'] ?? null;
 
@@ -137,7 +131,7 @@ class InstallCommand extends Command
         $this->output->write(sprintf('Updating composer.json with autoload for %s... ', $namespace));
 
         $composerJson = file_get_contents(BASEDIR . '/composer.json');
-        $composerArray = json_decode($composerJson, true);
+        $composerArray = json_decode($composerJson, true, 512, JSON_THROW_ON_ERROR);
 
         if (!array_key_exists('autoload', $composerArray)) {
             $composerArray['autoload'] = [];
@@ -157,7 +151,7 @@ class InstallCommand extends Command
             $composerArray['autoload']['files'][] = 'parable_init.php';
         }
 
-        $composerJson = json_encode($composerArray, JSON_PRETTY_PRINT);
+        $composerJson = json_encode($composerArray, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $composerJson = str_replace('\/', DS, $composerJson);
         file_put_contents(BASEDIR . '/composer.json', $composerJson);
 

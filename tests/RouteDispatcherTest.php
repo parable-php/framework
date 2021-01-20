@@ -10,17 +10,10 @@ use Parable\Routing\Route;
 
 class RouteDispatcherTest extends AbstractTestCase
 {
-    /**
-     * @var RouteDispatcher
-     */
-    protected $routeDispatcher;
+    protected RouteDispatcher $routeDispatcher;
+    protected Response $response;
 
-    /**
-     * @var Response
-     */
-    protected $response;
-
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +23,7 @@ class RouteDispatcherTest extends AbstractTestCase
 
     public function testDispatchClosureRouteWithoutParameters(): void
     {
-        $route = new Route(['GET'], 'test-index', '/', function () {
+        $route = new Route(['GET'], 'test-index', '/', static function () {
             echo 'test route found!';
         });
 
@@ -50,7 +43,7 @@ class RouteDispatcherTest extends AbstractTestCase
 
     public function testDispatchClosureRouteWithParameters(): void
     {
-        $route = new Route(['GET'], 'test-parameters', '/{id1}/{id2}', function ($id1, $id2) {
+        $route = new Route(['GET'], 'test-parameters', '/{id1}/{id2}', static function ($id1, $id2) {
             echo 'test parametered route found! (' . $id1 . ', ' . $id2 . ')';
         });
 
@@ -66,7 +59,7 @@ class RouteDispatcherTest extends AbstractTestCase
 
     public function testDispatchRouteWithTemplatePathInMetadata(): void
     {
-        $route = new Route(['GET'], 'test-index', '/', function () {
+        $route = new Route(['GET'], 'test-index', '/', static function () {
             echo 'test route found!';
         }, [
             'template' => 'Classes/template.phtml',
@@ -84,7 +77,7 @@ class RouteDispatcherTest extends AbstractTestCase
     {
         self::assertFalse($this->routeDispatcher->hasActiveOutputBuffer());
 
-        $route = new Route(['GET'], 'test-index', '/', function () {
+        $route = new Route(['GET'], 'test-index', '/', static function () {
             throw new Exception('Nope.');
         });
 

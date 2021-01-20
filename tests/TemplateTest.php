@@ -23,12 +23,9 @@ use Parable\Routing\Router;
 
 class TemplateTest extends AbstractTestCase
 {
-    /**
-     * @var Template
-     */
-    protected $template;
+    protected Template $template;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

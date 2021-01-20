@@ -29,32 +29,13 @@ class Template
 {
     use SupportsOutputBuffers;
 
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @var Path
-     */
-    protected $path;
-
-    /**
-     * @var string
-     */
-    protected $templatePath;
-
-    /**
-     * @var string|null
-     */
-    protected $templateRoot;
+    protected ?string $templatePath = null;
+    protected ?string $templateRoot = null;
 
     public function __construct(
-        Container $container,
-        Path $path
+        protected Container $container,
+        protected Path $path
     ) {
-        $this->container = $container;
-        $this->path = $path;
     }
 
     public function setTemplateRoot(string $templateRoot): void
@@ -84,7 +65,7 @@ class Template
 
     public function render(): void
     {
-        if (!$this->templatePath) {
+        if ($this->templatePath === null) {
             return;
         }
 
@@ -139,7 +120,7 @@ class Template
         foreach ($annotatedProperties as $annotatedProperty) {
             $nameMatch = '$' . $name;
 
-            if (strpos($annotatedProperty, $nameMatch) !== false) {
+            if (str_contains($annotatedProperty, $nameMatch)) {
                 $matchedProperty = str_replace(' * @property-read ', '', $annotatedProperty);
                 $matchedProperty = str_replace($nameMatch, '', $matchedProperty);
                 break;

@@ -5,12 +5,13 @@ namespace Parable\Framework\Tests;
 use Parable\Console\Application;
 use Parable\Console\Commands\HelpCommand;
 use Parable\Framework\Commands\InstallCommand;
+use Parable\Framework\Commands\ServerCommand;
 use Parable\Framework\ConsoleApplication;
 use Parable\Framework\Tests\Classes\ConsoleApplicationWrapper;
 
 class ConsoleApplicationTest extends AbstractTestCase
 {
-    public function testConsoleApplicationSetsHelpAndInstallCommands(): void
+    public function testConsoleApplicationSetsHelpInstallAndServerCommands(): void
     {
         $application = $this->container->get(ConsoleApplicationWrapper::class);
         $this->container->store($application, Application::class);
@@ -23,11 +24,13 @@ class ConsoleApplicationTest extends AbstractTestCase
 
         $commands = $application->getCommands();
 
-        self::assertCount(2, $commands);
+        self::assertCount(3, $commands);
         self::assertArrayHasKey('help', $commands);
         self::assertArrayHasKey('install', $commands);
+        self::assertArrayHasKey('server', $commands);
 
         self::assertInstanceOf(HelpCommand::class, $commands['help']);
         self::assertInstanceOf(InstallCommand::class, $commands['install']);
+        self::assertInstanceOf(ServerCommand::class, $commands['server']);
     }
 }

@@ -15,48 +15,15 @@ class RouteDispatcher
 {
     use SupportsOutputBuffers;
 
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @var EventManager
-     */
-    protected $eventManager;
-
-    /**
-     * @var Path
-     */
-    protected $path;
-
-    /**
-     * @var Response
-     */
-    protected $response;
-
-    /**
-     * @var Template
-     */
-    protected $template;
-
-    /**
-     * @var Route|null
-     */
-    protected $dispatchedRoute;
+    protected ?Route $dispatchedRoute;
 
     public function __construct(
-        Container $container,
-        EventManager $eventManager,
-        Path $path,
-        Response $response,
-        Template $template
+        protected Container $container,
+        protected EventManager $eventManager,
+        protected Path $path,
+        protected Response $response,
+        protected Template $template
     ) {
-        $this->container = $container;
-        $this->eventManager = $eventManager;
-        $this->path = $path;
-        $this->response = $response;
-        $this->template = $template;
     }
 
     public function dispatch(Route $route): void

@@ -26,7 +26,6 @@ class DatabaseFactoryTest extends AbstractTestCase
 
         $database = (new DatabaseFactory())->createFromConfig($config);
 
-        self::assertInstanceOf(Database::class, $database);
         self::assertSame(Database::TYPE_MYSQL, $database->getType());
         self::assertSame('localhost', $database->getHost());
         self::assertSame(1337, $database->getPort());

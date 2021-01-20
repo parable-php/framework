@@ -5,15 +5,13 @@ namespace Parable\Framework\Tests;
 use Parable\Di\Container;
 use Parable\Framework\Context;
 use Parable\Framework\Path;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
+abstract class AbstractTestCase extends TestCase
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +24,7 @@ abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $this->container->store(new Path(__DIR__));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -39,9 +37,9 @@ abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
      *
      * @return string
      */
-    public function getActualOutputAndClean()
+    public function getActualOutputAndClean(): string
     {
-        $content = parent::getActualOutput();
+        $content = $this->getActualOutput();
         ob_clean();
         return $content;
     }
