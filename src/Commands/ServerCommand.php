@@ -33,12 +33,12 @@ class ServerCommand extends Command
         $this->output->write('Enter the port [random]: ');
         self::$port = (int)$this->input->get();
 
-        if (self::$public === 0) {
+        if (empty(self::$public)) {
             self::$public = 'public';
         }
 
         /* Setting the port to 0 will take a randomly available port */
-        if (empty(self::$port)) {
+        if (self::$port === 0) {
             self::$port = random_int(51000, 53000);
         }
 
