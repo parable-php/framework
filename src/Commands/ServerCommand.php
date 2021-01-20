@@ -31,9 +31,9 @@ class ServerCommand extends Command
         self::$public = $this->input->get();
 
         $this->output->write('Enter the port [random]: ');
-        self::$port = $this->input->get();
+        self::$port = (int)$this->input->get();
 
-        if (empty(self::$public)) {
+        if (self::$public === 0) {
             self::$public = 'public';
         }
 
