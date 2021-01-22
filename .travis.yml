@@ -1,5 +1,0 @@
-language: php
-php:
-  - '8.0'
-install: composer install
-script: vendor/bin/phpunit --verbose tests

@@ -1,6 +1,6 @@
 # Parable PHP Framework
 
-[![Build Status](https://travis-ci.com/parable-php/parable.svg?branch=master)](https://travis-ci.com/parable-php/parable)
+[![Workflow Status](https://github.com/parable-php/parable/workflows/Tests/badge.svg)](https://github.com/parable-php/parable/actions?query=workflow%3ATests)
 [![Latest Stable Version](https://poser.pugx.org/parable-php/parable/v/stable)](https://packagist.org/packages/parable-php/parable)
 [![Latest Unstable Version](https://poser.pugx.org/parable-php/parable/v/unstable)](https://packagist.org/packages/parable-php/parable)
 [![License](https://poser.pugx.org/parable-php/parable/license)](https://packagist.org/packages/parable-php/parable)
