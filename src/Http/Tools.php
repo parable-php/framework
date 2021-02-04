@@ -2,8 +2,9 @@
 
 namespace Parable\Framework\Http;
 
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\GetSet\GetCollection;
+use Parable\GetSet\ServerCollection;
 use Parable\Http\HeaderSender;
 use Parable\Http\Request;
 use Parable\Routing\Route;
@@ -13,10 +14,10 @@ class Tools
 {
     public function __construct(
         protected GetCollection $get,
+        protected ServerCollection $server,
         protected Request $request,
         protected Router $router
-    ) {
-    }
+    ) {}
 
     public function getBaseUrl(): string
     {
@@ -33,8 +34,8 @@ class Tools
 
     public function getCurrentRelativeUrl(): string
     {
-        if (PHP_SAPI === 'cli-server') {
-            $_GET['PARABLE_REDIRECT_URL'] = $_SERVER['PATH_INFO'] ?? '';
+        if ($this->isCliServer()) {
+            $this->get->set('PARABLE_REDIRECT_URL', $this->server->get('PATH_INFO') ?? '');
         }
 
         return $this->get->get('PARABLE_REDIRECT_URL') !== null
@@ -78,7 +79,7 @@ class Tools
         $route = $this->router->getRouteByName($routeName);
 
         if ($route === null) {
-            throw new Exception(sprintf("Could not find route named '%s'", $routeName));
+            throw new FrameworkException(sprintf("Could not find route named '%s'", $routeName));
         }
 
         return $this->buildUrlFromRoute($route, $parameters);
@@ -102,6 +103,11 @@ class Tools
     public function terminate(int $exitCode): void
     {
         exit($exitCode); // @codeCoverageIgnore
+    }
+
+    protected function isCliServer(): bool
+    {
+        return PHP_SAPI === 'cli-server';
     }
 
     protected function replaceAndClean(string $search, string $replace, string $string): string

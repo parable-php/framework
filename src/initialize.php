@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use \Parable\Framework\Exception;
+use \Parable\Framework\FrameworkException;
 
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
@@ -14,7 +14,7 @@ if (!defined('BASEDIR')) {
     }
 
     if ($basedir === false) {
-        throw new Exception('Could not determine base path.');
+        throw new FrameworkException('Could not determine base path.');
     }
 
     define('BASEDIR', $basedir);

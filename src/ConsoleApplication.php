@@ -13,8 +13,7 @@ class ConsoleApplication
     public function __construct(
         protected Application $application,
         protected Container $container
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {

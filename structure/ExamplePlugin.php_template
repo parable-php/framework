@@ -7,15 +7,9 @@ use Parable\Routing\Router;
 
 class ExamplePlugin implements PluginInterface
 {
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
+    public function __construct(
+        protected Router $router
+    ) {}
 
     public function run(): void
     {

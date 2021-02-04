@@ -3,7 +3,7 @@
 namespace Parable\Framework\Plugins;
 
 use Parable\Di\Container;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 
 class PluginManager
 {
@@ -25,7 +25,7 @@ class PluginManager
             $plugin = $container->get($pluginClassName);
 
             if (!($plugin instanceof PluginInterface)) {
-                throw new Exception(sprintf(
+                throw new FrameworkException(sprintf(
                     "Plugin '%s' does not implement PluginInterface",
                     $pluginClassName
                 ));

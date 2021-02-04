@@ -2,6 +2,6 @@
 
 namespace Parable\Framework;
 
-class Exception extends \Exception
+class FrameworkException extends \Exception
 {
 }

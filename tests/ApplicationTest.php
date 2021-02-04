@@ -8,7 +8,7 @@ use Parable\Framework\Application;
 use Parable\Framework\Config;
 use Parable\Framework\Context;
 use Parable\Framework\EventTriggers;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Http\RouteDispatcher;
 use Parable\Http\HeaderSender;
 use Parable\Http\Response;
@@ -30,7 +30,7 @@ class ApplicationTest extends AbstractTestCase
 
         try {
             Context::setIsCliForTest(false);
-        } catch (Exception $e) {
+        } catch (FrameworkException $e) {
             throw $e;
             // We don't care if it worked at this point, tests will fail if it's important
         }
@@ -57,7 +57,7 @@ class ApplicationTest extends AbstractTestCase
     {
         Context::setIsCliForTest(true);
 
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Application cannot be used in CLI context.");
 
         $this->container->build(Application::class);
@@ -95,7 +95,7 @@ class ApplicationTest extends AbstractTestCase
 
     public function testApplicationCannotBeBootedTwice(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("App has already booted.");
 
         $application = $this->container->build(Application::class);

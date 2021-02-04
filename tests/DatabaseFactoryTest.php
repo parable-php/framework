@@ -4,7 +4,7 @@ namespace Parable\Framework\Tests;
 
 use Parable\Framework\Config;
 use Parable\Framework\DatabaseFactory;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Orm\Database;
 use PDO;
 
@@ -54,7 +54,7 @@ class DatabaseFactoryTest extends AbstractTestCase
 
     public function testThrowsExceptionIfTypeIsUnknown(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Unknown database type: yoloDb.");
 
         $config = new Config();
@@ -67,7 +67,7 @@ class DatabaseFactoryTest extends AbstractTestCase
 
     public function testThrowsExceptionIfNoDatabaseConfigAvailable(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Cannot create database from provided config.");
 
         (new DatabaseFactory())->createFromConfig(new Config());

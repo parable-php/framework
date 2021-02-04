@@ -2,9 +2,10 @@
 
 namespace Parable\Framework\Tests;
 
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Http\Tools;
 use Parable\GetSet\GetCollection;
+use Parable\GetSet\ServerCollection;
 use Parable\Http\HeaderSender;
 use Parable\Http\Request;
 use Parable\Routing\Route;
@@ -14,35 +15,6 @@ class ToolsTest extends AbstractTestCase
 {
     /** @var Tools */
     protected $tools;
-
-    private function setUpRequestAndToolsForUrl(string $baseUrl, string $relativePath): void
-    {
-        $request = new Request('GET', $baseUrl . '/' . $relativePath);
-
-        $this->container->store($request);
-
-        $redirectUrl = trim(str_replace(
-            $baseUrl,
-            '',
-            $request->getUri()
-                ->withFragment(null)
-                ->withQuery(null)
-                ->getUriString()
-        ), '/');
-
-        // PARABLE_REDIRECT_URL is always without fragments or query strings
-        $this->container->get(GetCollection::class)->set(
-            'PARABLE_REDIRECT_URL',
-            $redirectUrl
-        );
-
-        $this->tools = new class (...$this->container->getDependenciesFor(Tools::class)) extends Tools {
-            public function terminate(int $exitCode): void
-            {
-                // Do nothing here
-            }
-        };
-    }
 
     public function testProjectInSubfolderHasBaseUrlRecognizedProperly(): void
     {
@@ -59,6 +31,15 @@ class ToolsTest extends AbstractTestCase
 
         self::assertSame('https://test.dev', $this->tools->getBaseUrl());
         self::assertSame('https://test.dev/page/home', $this->tools->getCurrentUrl());
+        self::assertSame('page/home', $this->tools->getCurrentRelativeUrl());
+    }
+
+    public function testCurrentRelativeUrlWorksWithCliServer(): void
+    {
+        $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home', true);
+
+        // If we're using the cli server, the getCollection won't have the key
+        // So we attempt to take it from PATH_INFO instead
         self::assertSame('page/home', $this->tools->getCurrentRelativeUrl());
     }
 
@@ -187,7 +168,7 @@ class ToolsTest extends AbstractTestCase
         $this->setUpRequestAndToolsForUrl('https://test.dev', 'page/home');
 
         $this->expectExceptionMessage("Could not find route named 'nope'");
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
 
         $this->tools->buildUrlFromRouteName('nope');
     }
@@ -202,5 +183,60 @@ class ToolsTest extends AbstractTestCase
             'https://test.dev/test/path#other-fragment=1',
             $this->tools->buildUrl('test/path#other-fragment=1')
         );
+    }
+
+    protected function setUpRequestAndToolsForUrl(
+        string $baseUrl,
+        string $relativePath,
+        bool $isCliServer = false
+    ): void {
+        $request = new Request('GET', $baseUrl . '/' . $relativePath);
+
+        $this->container->store($request);
+
+        $redirectUrl = trim(str_replace(
+            $baseUrl,
+            '',
+            $request->getUri()
+                ->withFragment(null)
+                ->withQuery(null)
+                ->getUriString()
+        ), '/');
+
+        // PARABLE_REDIRECT_URL is always without fragments or query strings
+        $this->container->get(GetCollection::class)->set(
+            'PARABLE_REDIRECT_URL',
+            $redirectUrl
+        );
+
+        $dependencies = $this->container->getDependenciesFor(Tools::class);
+        $dependencies[] = $isCliServer;
+        $dependencies[] = $relativePath;
+
+        $this->tools = new class (...$dependencies) extends Tools {
+            public function __construct(
+                protected GetCollection $get,
+                protected ServerCollection $server,
+                protected Request $request,
+                protected Router $router,
+                protected bool $isCliServerCustom,
+                string $relativePath
+            ) {
+                parent::__construct($get, $server, $request, $router);
+
+                if ($isCliServerCustom) {
+                    $server->set('PATH_INFO', $relativePath);
+                }
+            }
+
+            public function terminate(int $exitCode): void
+            {
+                // Do nothing here
+            }
+            protected function isCliServer(): bool
+            {
+                return $this->isCliServerCustom;
+            }
+        };
     }
 }

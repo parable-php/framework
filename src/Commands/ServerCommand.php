@@ -9,9 +9,9 @@ use Parable\Console\Output;
 
 class ServerCommand extends Command
 {
-    protected static ?string $public;
-    protected static ?int $port;
-    protected static ?Output $outputStatic;
+    protected static ?string $public = null;
+    protected static ?int $port = null;
+    protected static ?Output $outputStatic = null;
 
     public function __construct()
     {

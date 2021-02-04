@@ -5,7 +5,7 @@ namespace Parable\Framework\Tests;
 use Parable\Di\Container;
 use Parable\Event\EventManager;
 use Parable\Framework\Config;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Http\Template;
 use Parable\Framework\Http\Tools;
 use Parable\Framework\Path;
@@ -66,7 +66,7 @@ class TemplateTest extends AbstractTestCase
 
     public function testPartialThrowsExceptionOnUnknownPath(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Template path 'nope' could not be loaded.");
 
         $this->template->partial('nope');
@@ -112,7 +112,7 @@ class TemplateTest extends AbstractTestCase
 
     public function testRenderWithoutValidTemplatePathThrowsException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Template path 'nope' could not be loaded.");
 
         $this->template->setTemplatePath('nope');
@@ -122,7 +122,7 @@ class TemplateTest extends AbstractTestCase
 
     public function testPropertyNotAvailableOnTemplateThrowsException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
         $this->expectExceptionMessage("Could not load property 'nope' through Template.");
 
         $this->template->nope;

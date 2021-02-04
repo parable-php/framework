@@ -9,7 +9,6 @@ use Parable\Framework\Http\Tools;
 use Parable\Framework\Plugins\PluginManager;
 use Parable\GetSet\GetCollection;
 use Parable\Http\Request;
-use Parable\Http\RequestFactory;
 use Parable\Http\Response;
 use Parable\Http\ResponseDispatcher;
 use Parable\Routing\Route;
@@ -21,10 +20,6 @@ class Application
 
     public const PLUGIN_BEFORE_BOOT = 'plugin_before_boot';
     public const PLUGIN_AFTER_BOOT = 'plugin_after_boot';
-
-    /* Late instantiation */
-    protected Tools $tools;
-    protected Request $request;
 
     /* Replaceable instantiation */
     protected ?ResponseDispatcher $responseDispatcher = null;
@@ -38,19 +33,14 @@ class Application
         protected EventManager $eventManager,
         protected GetCollection $get,
         protected Path $path,
+        protected Request $request,
         protected Response $response,
-        protected Router $router
+        protected Router $router,
+        protected Tools $tools,
     ) {
         if (Context::isCli()) {
-            throw new Exception('Application cannot be used in CLI context.');
+            throw new FrameworkException('Application cannot be used in CLI context.');
         }
-
-        // Create request from server & store it
-        $this->request = RequestFactory::createFromServer();
-        $this->container->store($this->request);
-
-        // Tools requires the Request to be available, so we build this one manually
-        $this->tools = $this->container->get(Tools::class);
     }
 
     public function run(): void
@@ -80,7 +70,7 @@ class Application
         $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_BEFORE, $this);
 
         if ($this->hasBooted()) {
-            throw new Exception('App has already booted.');
+            throw new FrameworkException('App has already booted.');
         }
 
         $this->startPluginsBeforeBoot();
@@ -226,7 +216,7 @@ class Application
     {
         $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_BEFORE, $this->response);
 
-        $this->responseDispatcher->dispatch($this->response);
+        $this->responseDispatcher->dispatchWithoutTerminate($this->response);
 
         $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_AFTER, $this->response);
     }

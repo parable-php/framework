@@ -3,7 +3,7 @@
 namespace Parable\Framework\Http;
 
 use Parable\Di\Container;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Path;
 use Parable\Http\Traits\SupportsOutputBuffers;
 
@@ -35,8 +35,7 @@ class Template
     public function __construct(
         protected Container $container,
         protected Path $path
-    ) {
-    }
+    ) {}
 
     public function setTemplateRoot(string $templateRoot): void
     {
@@ -54,7 +53,7 @@ class Template
 
         try {
             $this->loadTemplatePath($templatePath);
-        } catch (Exception $e) {
+        } catch (FrameworkException $e) {
             $this->undoOutputBuffer();
 
             throw $e;
@@ -78,15 +77,17 @@ class Template
 
         if (file_exists($fullPath)) {
             require $fullPath;
+
             return;
         }
 
         if (file_exists($this->path->getPath($fullPath))) {
             require $this->path->getPath($fullPath);
+
             return;
         }
 
-        throw new Exception(sprintf(
+        throw new FrameworkException(sprintf(
             "Template path '%s' could not be loaded.",
             $fullPath
         ));
@@ -128,7 +129,7 @@ class Template
         }
 
         if ($matchedProperty === null) {
-            throw new Exception(sprintf(
+            throw new FrameworkException(sprintf(
                 "Could not load property '%s' through Template.",
                 $name
             ));

@@ -12,7 +12,7 @@ class DatabaseFactory
             return $this->createDatabaseFromConfig($config);
         }
 
-        throw new Exception('Cannot create database from provided config.');
+        throw new FrameworkException('Cannot create database from provided config.');
     }
 
     protected function createDatabaseFromConfig(Config $config): Database
@@ -42,7 +42,7 @@ class DatabaseFactory
             return $this->createSqliteDatabaseFromConfigValues($configValuesMerged);
         }
 
-        throw new Exception(sprintf(
+        throw new FrameworkException(sprintf(
             'Unknown database type: %s.',
             $databaseType
         ));

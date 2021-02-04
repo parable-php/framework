@@ -4,7 +4,7 @@ namespace Parable\Framework;
 
 class Context
 {
-    protected static ?bool $isCli;
+    protected static ?bool $isCli = null;
 
     public static function isCli(): bool
     {
@@ -24,7 +24,7 @@ class Context
     public static function setIsCliForTest(bool $isCli): void
     {
         if (!defined('RUNNING_IN_TEST')) {
-            throw new Exception('Cannot set context return value outside of tests.'); // @codeCoverageIgnore
+            throw new FrameworkException('Cannot set context return value outside of tests.'); // @codeCoverageIgnore
         }
 
         self::$isCli = $isCli;

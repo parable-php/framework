@@ -15,7 +15,7 @@ class RouteDispatcher
 {
     use SupportsOutputBuffers;
 
-    protected ?Route $dispatchedRoute;
+    protected ?Route $dispatchedRoute = null;
 
     public function __construct(
         protected Container $container,
@@ -23,8 +23,7 @@ class RouteDispatcher
         protected Path $path,
         protected Response $response,
         protected Template $template
-    ) {
-    }
+    ) {}
 
     public function dispatch(Route $route): void
     {
@@ -36,6 +35,7 @@ class RouteDispatcher
             $this->startOutputBuffer();
 
             $parameters = [];
+
             foreach ($route->getParameterValues()->getAll() as $value) {
                 $parameters[] = $value;
             }

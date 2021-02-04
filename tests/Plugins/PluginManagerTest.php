@@ -5,7 +5,7 @@ namespace Parable\Framework\Tests\Plugins;
 use Parable\Framework\Config;
 use Parable\Framework\ConsoleApplication;
 use Parable\Framework\Context;
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Plugins\PluginManager;
 use Parable\Framework\Tests\AbstractTestCase;
 use Parable\Framework\Tests\Classes\CliPluginImplementation;
@@ -70,7 +70,7 @@ class PluginManagerTest extends AbstractTestCase
     public function testPluginWithoutValidInterfaceIsNotAccepted(): void
     {
         $this->expectExceptionMessage("Plugin 'Parable\Framework\Config' does not implement PluginInterface");
-        $this->expectException(Exception::class);
+        $this->expectException(FrameworkException::class);
 
         $this->pluginManager::addPlugin('now', Config::class);
         $this->pluginManager::startPlugins('now', $this->container);

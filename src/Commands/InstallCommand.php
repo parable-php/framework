@@ -141,7 +141,7 @@ class InstallCommand extends Command
             $composerArray['autoload']['files'] = [];
         }
 
-        if (!in_array('parable_init.php', $composerArray['autoload']['files'])) {
+        if (!in_array('parable_init.php', $composerArray['autoload']['files'], true)) {
             $composerArray['autoload']['files'][] = 'parable_init.php';
         }
 
@@ -242,7 +242,7 @@ class InstallCommand extends Command
         if (!is_dir($path)) {
             $this->output->write('Creating ' . $path . '... ');
 
-            if (!mkdir($path)) {
+            if (!mkdir($path) && !is_dir($path)) {
                 $this->output->writeln('<error>[ERROR]</error>');
                 return false;
             }
@@ -299,9 +299,19 @@ class InstallCommand extends Command
             return null;
         }
 
-        $contents = str_replace('###ROOT_NAMESPACE###', $namespace, $contents);
-        $contents = str_replace('###SOURCE_DIRECTORY###', $sourceDir, $contents);
-        $contents = str_replace('###PUBLIC_DIRECTORY###', $publicDir, $contents);
+        $contents = str_replace(
+            [
+                '###ROOT_NAMESPACE###',
+                '###SOURCE_DIRECTORY###',
+                '###PUBLIC_DIRECTORY###'
+            ],
+            [
+                $namespace,
+                $sourceDir,
+                $publicDir
+            ],
+            $contents
+        );
 
         return $contents;
     }

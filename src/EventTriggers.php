@@ -4,9 +4,7 @@ namespace Parable\Framework;
 
 class EventTriggers
 {
-    /**
-     * Application triggers
-     */
+    /* Application triggers */
     public const APPLICATION_BOOT_BEFORE = 'parable_boot_before';
     public const APPLICATION_BOOT_AFTER = 'parable_boot_after';
     public const APPLICATION_RUN_BEFORE = 'parable_run_before';
@@ -28,9 +26,7 @@ class EventTriggers
     public const APPLICATION_PLUGINS_START_AFTER_BOOT_BEFORE = 'parable_plugins_start_after_boot_before';
     public const APPLICATION_PLUGINS_START_AFTER_BOOT_AFTER = 'parable_plugins_start_after_boot_after';
 
-    /**
-     * Route dispatcher triggers
-     */
+    /* Route dispatcher triggers */
     public const ROUTE_DISPATCHER_DISPATCH_BEFORE = 'parable_route_dispatch_before';
     public const ROUTE_DISPATCHER_DISPATCH_AFTER = 'parable_route_dispatch_after';
     public const ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE = 'parable_route_dispatch_template_before';

@@ -2,7 +2,7 @@
 
 namespace Parable\Framework\Tests;
 
-use Parable\Framework\Exception;
+use Parable\Framework\FrameworkException;
 use Parable\Framework\Http\RouteDispatcher;
 use Parable\Framework\Tests\Classes\ControllerAction;
 use Parable\Http\Response;
@@ -78,18 +78,18 @@ class RouteDispatcherTest extends AbstractTestCase
         self::assertFalse($this->routeDispatcher->hasActiveOutputBuffer());
 
         $route = new Route(['GET'], 'test-index', '/', static function () {
-            throw new Exception('Nope.');
+            throw new FrameworkException('Nope.');
         });
 
         $e = null;
 
         try {
             $this->routeDispatcher->dispatch($route);
-        } catch (Exception $e) {
+        } catch (FrameworkException $e) {
             // 's fine
         }
 
-        self::assertInstanceOf(Exception::class, $e);
+        self::assertInstanceOf(FrameworkException::class, $e);
 
         self::assertFalse($this->routeDispatcher->hasActiveOutputBuffer());
     }
