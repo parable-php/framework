@@ -6,6 +6,7 @@ namespace Parable\Framework\Commands;
 
 use Parable\Console\Command;
 use Parable\Console\Output;
+use Parable\Console\Parameter;
 
 class ServerCommand extends Command
 {
@@ -15,6 +16,9 @@ class ServerCommand extends Command
 
     public function __construct()
     {
+        $this->addOption('public', Parameter::OPTION_VALUE_REQUIRED);
+        $this->addOption('port');
+
         $this->setName('server');
         $this->setDescription('Run Parable with PHP\'s built-in server.');
     }
@@ -27,11 +31,21 @@ class ServerCommand extends Command
         pcntl_signal(SIGHUP, [self::class, 'signalHandler']);
         pcntl_signal(SIGINT, [self::class, 'signalHandler']);
 
-        $this->output->write('Enter your public folder [public]: ');
-        self::$public = $this->input->get();
+        if ((self::$public = $this->parameter->getOption('public')) === null) {
+            $this->output->write('Enter your public folder [public]: ');
+            self::$public = $this->input->get();
+        }
 
-        $this->output->write('Enter the port [random]: ');
-        self::$port = (int)$this->input->get();
+        if ($this->parameter->getOption('port') !== null) {
+            if ($this->parameter->getOption('port') === true) {
+                self::$port = 0; // this will cause a random port
+            } else {
+                self::$port = (int)$this->parameter->getOption('port');
+            }
+        } else {
+            $this->output->write('Enter the port [random]: ');
+            self::$port = (int)$this->input->get();
+        }
 
         if (empty(self::$public)) {
             self::$public = 'public';
