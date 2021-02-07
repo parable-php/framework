@@ -11,12 +11,14 @@ use Parable\Console\Parameter;
 class ServerCommand extends Command
 {
     protected static ?string $public = null;
+    protected static ?string $host = null;
     protected static ?int $port = null;
     protected static ?Output $outputStatic = null;
 
     public function __construct()
     {
         $this->addOption('public', Parameter::OPTION_VALUE_REQUIRED);
+        $this->addOption('host');
         $this->addOption('port');
 
         $this->setName('server');
@@ -36,6 +38,11 @@ class ServerCommand extends Command
             self::$public = $this->input->get();
         }
 
+        if ((self::$host = $this->parameter->getOption('host')) === null) {
+            $this->output->write('Enter the host [localhost]: ');
+            self::$host = $this->input->get();
+        }
+
         if ($this->parameter->getOption('port') !== null) {
             if ($this->parameter->getOption('port') === true) {
                 self::$port = 0; // this will cause a random port
@@ -51,14 +58,19 @@ class ServerCommand extends Command
             self::$public = 'public';
         }
 
+        if (empty(self::$host)) {
+            self::$host = 'localhost';
+        }
+
         /* Setting the port to 0 will take a randomly available port */
         if (self::$port === 0) {
             self::$port = random_int(51000, 53000);
         }
 
         $fullCommand = sprintf(
-            'cd %s && php -S localhost:%d',
+            'cd %s && php -S %s:%d',
             self::$public,
+            self::$host,
             self::$port
         );
 
