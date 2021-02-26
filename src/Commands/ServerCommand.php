@@ -73,7 +73,8 @@ class ServerCommand extends Command
             ['success']
         );
 
-        shell_exec($fullCommand);
+        /** @psalm-suppress ForbiddenCode */
+        shell_exec(escapeshellcmd($fullCommand));
     }
 
     protected static function signalHandler(): void

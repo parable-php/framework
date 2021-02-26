@@ -135,6 +135,6 @@ class Template
             ));
         }
 
-        return $this->container->get((string)$matchedProperty);
+        return $this->container->get($matchedProperty);
     }
 }
