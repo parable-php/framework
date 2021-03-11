@@ -9,7 +9,7 @@ use Parable\Http\Traits\SupportsOutputBuffers;
 
 /**
  * @property-read \Parable\Di\Container $container
- * @property-read \Parable\Event\EventManager $eventManager
+ * @property-read \Parable\Event\Events $events
  * @property-read \Parable\Framework\Path $path
  * @property-read \Parable\Framework\Config $config
  * @property-read \Parable\Framework\Http\Tools $tools

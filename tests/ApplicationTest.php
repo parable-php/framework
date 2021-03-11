@@ -3,7 +3,7 @@
 namespace Parable\Framework\Tests;
 
 use DateTime;
-use Parable\Event\EventManager;
+use Parable\Event\Events;
 use Parable\Framework\Application;
 use Parable\Framework\Config;
 use Parable\Framework\Context;
@@ -38,8 +38,8 @@ class ApplicationTest extends AbstractTestCase
         $this->config = $this->container->get(Config::class);
         $this->config->set('parable.session.enabled', false);
 
-        $eventManager = $this->container->get(EventManager::class);
-        $eventManager->listen('*', function ($event, $payload) {
+        $Events = $this->container->get(Events::class);
+        $Events->listen('*', function ($event, $payload) {
             $this->triggeredEvents[$event] = $payload;
         });
 

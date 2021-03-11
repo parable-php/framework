@@ -3,7 +3,7 @@
 namespace Parable\Framework\Http;
 
 use Parable\Di\Container;
-use Parable\Event\EventManager;
+use Parable\Event\Events;
 use Parable\Framework\EventTriggers;
 use Parable\Framework\Path;
 use Parable\Http\Response;
@@ -19,7 +19,7 @@ class RouteDispatcher
 
     public function __construct(
         protected Container $container,
-        protected EventManager $eventManager,
+        protected Events $Events,
         protected Path $path,
         protected Response $response,
         protected Template $template
@@ -30,7 +30,7 @@ class RouteDispatcher
         try {
             $this->dispatchedRoute = $route;
 
-            $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_BEFORE, $route);
+            $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_BEFORE, $route);
 
             $this->startOutputBuffer();
 
@@ -56,7 +56,7 @@ class RouteDispatcher
             $templatePath = $route->getMetadataValue('template');
 
             if ($templatePath !== null && !empty($templatePath)) {
-                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $templatePath);
+                $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $templatePath);
 
                 $this->startOutputBuffer();
 
@@ -65,10 +65,10 @@ class RouteDispatcher
 
                 $this->response->appendBody($this->getOutputBuffer());
 
-                $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $templatePath);
+                $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $templatePath);
             }
 
-            $this->eventManager->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_AFTER, $route);
+            $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_AFTER, $route);
         } catch (Throwable $e) {
             $this->undoAllOutputBuffers();
 

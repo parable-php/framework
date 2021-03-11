@@ -3,7 +3,7 @@
 namespace Parable\Framework;
 
 use Parable\Di\Container;
-use Parable\Event\EventManager;
+use Parable\Event\Events;
 use Parable\Framework\Http\RouteDispatcher;
 use Parable\Framework\Http\Tools;
 use Parable\Framework\Plugins\PluginManager;
@@ -30,7 +30,7 @@ class Application
     public function __construct(
         protected Container $container,
         protected Config $config,
-        protected EventManager $eventManager,
+        protected Events $Events,
         protected GetCollection $get,
         protected Path $path,
         protected Request $request,
@@ -45,7 +45,7 @@ class Application
 
     public function run(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RUN_BEFORE, $this);
+        $this->Events->trigger(EventTriggers::APPLICATION_RUN_BEFORE, $this);
 
         if (!$this->hasBooted) {
             $this->boot();
@@ -62,12 +62,12 @@ class Application
 
         $this->dispatchResponse();
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RUN_AFTER, $this);
+        $this->Events->trigger(EventTriggers::APPLICATION_RUN_AFTER, $this);
     }
 
     public function boot(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_BEFORE, $this);
+        $this->Events->trigger(EventTriggers::APPLICATION_BOOT_BEFORE, $this);
 
         if ($this->hasBooted()) {
             throw new FrameworkException('App has already booted.');
@@ -102,7 +102,7 @@ class Application
 
         $this->hasBooted = true;
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
+        $this->Events->trigger(EventTriggers::APPLICATION_BOOT_AFTER, $this);
     }
 
     public function hasBooted(): bool
@@ -122,25 +122,25 @@ class Application
 
     protected function startPluginsBeforeBoot(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_PLUGINS_START_BEFORE_BOOT_BEFORE);
+        $this->Events->trigger(EventTriggers::APPLICATION_PLUGINS_START_BEFORE_BOOT_BEFORE);
 
         PluginManager::startPlugins(self::PLUGIN_BEFORE_BOOT, $this->container);
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_PLUGINS_START_BEFORE_BOOT_AFTER);
+        $this->Events->trigger(EventTriggers::APPLICATION_PLUGINS_START_BEFORE_BOOT_AFTER);
     }
 
     protected function startPluginsAfterBoot(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_PLUGINS_START_AFTER_BOOT_BEFORE);
+        $this->Events->trigger(EventTriggers::APPLICATION_PLUGINS_START_AFTER_BOOT_BEFORE);
 
         PluginManager::startPlugins(self::PLUGIN_AFTER_BOOT, $this->container);
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_PLUGINS_START_AFTER_BOOT_AFTER);
+        $this->Events->trigger(EventTriggers::APPLICATION_PLUGINS_START_AFTER_BOOT_AFTER);
     }
 
     protected function startSession(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_SESSION_START_BEFORE);
+        $this->Events->trigger(EventTriggers::APPLICATION_SESSION_START_BEFORE);
 
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
@@ -156,7 +156,7 @@ class Application
 
         $sessionName = session_name();
 
-        $this->eventManager->trigger(
+        $this->Events->trigger(
             EventTriggers::APPLICATION_SESSION_START_AFTER,
             $sessionName
         );
@@ -164,7 +164,7 @@ class Application
 
     protected function setupDatabaseFromConfig(Config $config): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_INIT_DATABASE_BEFORE);
+        $this->Events->trigger(EventTriggers::APPLICATION_INIT_DATABASE_BEFORE);
 
         $databaseFactory = new DatabaseFactory();
         $database = $databaseFactory->createFromConfig($config);
@@ -173,18 +173,18 @@ class Application
 
         $database->connect();
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_INIT_DATABASE_AFTER, $database);
+        $this->Events->trigger(EventTriggers::APPLICATION_INIT_DATABASE_AFTER, $database);
     }
 
     protected function setDefaultTimeZone(string $timezone): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE, $timezone);
+        $this->Events->trigger(EventTriggers::APPLICATION_SET_DEFAULT_TIMEZONE_BEFORE, $timezone);
 
         date_default_timezone_set($timezone);
 
         $currentlySetTimezone = date_default_timezone_get();
 
-        $this->eventManager->trigger(
+        $this->Events->trigger(
             EventTriggers::APPLICATION_SET_DEFAULT_TIMEZONE_AFTER,
             $currentlySetTimezone
         );
@@ -194,7 +194,7 @@ class Application
     {
         $currentRelativeUrl = $this->tools->getCurrentRelativeUrl();
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_BEFORE, $currentRelativeUrl);
+        $this->Events->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_BEFORE, $currentRelativeUrl);
 
         $route = $this->router->match(
             $this->request->getMethod(),
@@ -202,23 +202,23 @@ class Application
         );
 
         if ($route instanceof Route) {
-            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_FOUND, $route);
+            $this->Events->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_FOUND, $route);
         } else {
-            $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_NOT_FOUND, $currentRelativeUrl);
+            $this->Events->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_NOT_FOUND, $currentRelativeUrl);
         }
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_AFTER, $route);
+        $this->Events->trigger(EventTriggers::APPLICATION_ROUTE_MATCH_AFTER, $route);
 
         return $route;
     }
 
     protected function dispatchResponse(): void
     {
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_BEFORE, $this->response);
+        $this->Events->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_BEFORE, $this->response);
 
         $this->responseDispatcher->dispatchWithoutTerminate($this->response);
 
-        $this->eventManager->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_AFTER, $this->response);
+        $this->Events->trigger(EventTriggers::APPLICATION_RESPONSE_DISPATCH_AFTER, $this->response);
     }
 
     protected function enableErrorReporting(): void

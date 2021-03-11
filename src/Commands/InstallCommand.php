@@ -17,12 +17,12 @@ class InstallCommand extends Command
 
     public function run(): void
     {
-        $this->output->writelns([
+        $this->output->writelns(
             sprintf('Welcome to the installation of Parable %s!', Application::VERSION),
             '',
             'This will install Parable in a basic form. If you\'ve previously run this command,',
             'this may overwrite existing files if you choose the same public directory.',
-        ]);
+        );
 
         if (!$this->askUserToContinue()) {
             $this->output->writeln('<info>You chose not to continue.</info>');

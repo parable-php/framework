@@ -3,7 +3,7 @@
 namespace Parable\Framework\Tests;
 
 use Parable\Di\Container;
-use Parable\Event\EventManager;
+use Parable\Event\Events;
 use Parable\Framework\Config;
 use Parable\Framework\FrameworkException;
 use Parable\Framework\Http\Template;
@@ -143,9 +143,9 @@ class TemplateTest extends AbstractTestCase
                 Container::class,
                 'container',
             ],
-            'eventManager' => [
-                EventManager::class,
-                'eventManager',
+            'events' => [
+                Events::class,
+                'events',
             ],
             'path' => [
                 Path::class,

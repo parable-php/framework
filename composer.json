@@ -23,13 +23,13 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pcntl": "*",
-        "parable-php/console": "^0.5.1",
-        "parable-php/event": "^0.3.0",
-        "parable-php/getset": "^0.2.0",
-        "parable-php/orm": "^0.10.1",
-        "parable-php/routing": "^0.3.0",
-        "parable-php/http": "^0.5.1",
-        "parable-php/di": "^0.3.1"
+        "parable-php/console": "^0.6.1",
+        "parable-php/di": "^0.3.2",
+        "parable-php/event": "^0.4.0",
+        "parable-php/getset": "^0.3.0",
+        "parable-php/orm": "^0.11.1",
+        "parable-php/routing": "^0.4.0",
+        "parable-php/http": "^0.5.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
