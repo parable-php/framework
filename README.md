@@ -1,9 +1,9 @@
 # Parable PHP Framework
 
-[![Workflow Status](https://github.com/parable-php/parable/workflows/Tests/badge.svg)](https://github.com/parable-php/parable/actions?query=workflow%3ATests)
-[![Latest Stable Version](https://poser.pugx.org/parable-php/parable/v/stable)](https://packagist.org/packages/parable-php/parable)
-[![Latest Unstable Version](https://poser.pugx.org/parable-php/parable/v/unstable)](https://packagist.org/packages/parable-php/parable)
-[![License](https://poser.pugx.org/parable-php/parable/license)](https://packagist.org/packages/parable-php/parable)
+[![Workflow Status](https://github.com/parable-php/framework/workflows/Tests/badge.svg)](https://github.com/parable-php/framework/actions?query=workflow%3ATests)
+[![Latest Stable Version](https://poser.pugx.org/parable-php/framework/v/stable)](https://packagist.org/packages/parable-php/framework)
+[![Latest Unstable Version](https://poser.pugx.org/parable-php/framework/v/unstable)](https://packagist.org/packages/parable-php/framework)
+[![License](https://poser.pugx.org/parable-php/framework/license)](https://packagist.org/packages/parable-php/framework)
 
 Parable is a PHP framework with two goals: it's just enough, and it doesn't enforce a way to build.
 
