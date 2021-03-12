@@ -25,7 +25,7 @@ $ vendor/bin/parable install
 
 After installation (and you chose to install the example app) you'll have an example application to look at.
 
-Parable 2.0.0 is based around plugins to arrange everything. It's not a framework that makes you do things a certain way outside of this.
+Parable 2.0 is based around plugins to arrange everything. It's not a framework that makes you do things a certain way outside of this.
 
 If you want to set up routes? `RoutesPlugin`. Set up the configuration? `ConfigPlugin`. As long as you add these to `Boot.php` they'll be loaded at the appropriate time.
 
