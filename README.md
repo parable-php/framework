@@ -151,6 +151,21 @@ echo 'Value is ' . $this->dataCollection->get('viewData.value');
 
 The `DataCollection` from `parable-php/getset` is specifically intended for free-form data storing and sharing across files, so it's perfect for this!
 
+Note that you don't need either controllers OR templates! You can also just pass an anonymous function in, which can be perfect for small and simple REST APIs:
+
+```php
+        $this->router->add(
+            ['GET'],
+            'api-index',
+            '/api',
+            function () {
+                echo json_encode([
+                    'status' => 'success',
+                ]);
+            },
+        );
+```
+
 ## Contributing
 
 Any suggestions, bug reports or general feedback is welcome. Use github issues and pull requests, or find me over at [devvoh.com](https://devvoh.com).
