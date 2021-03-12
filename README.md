@@ -42,13 +42,9 @@ In the example below, `yourstuff` is just an example of adding your own config v
 ```php
 class ConfigPlugin implements PluginInterface
 {
-    /** @var Config */
-    protected $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(
+        protected Config $config
+    ) {}
 
     public function run(): void
     {
@@ -93,17 +89,10 @@ For full information on `parable-php/routing`, read the [README.md](https://gith
 ```php
 class RoutingPlugin implements PluginInterface
 {
-    /** @var Router */
-    protected $router;
-
-    /** @var Path */
-    protected $path;
-
-    public function __construct(Router $router, Path $path)
-    {
-        $this->router = $router;
-        $this->path = $path;
-    }
+    public function __construct(
+        protected Router $router,
+        protected Path $path
+    ) {}
 
     public function run(): void
     {
