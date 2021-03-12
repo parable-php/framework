@@ -9,7 +9,7 @@ Parable is a PHP framework with two goals: it's just enough, and it doesn't enfo
 
 ## Install
 
-Php 7.1+ and [composer](https://getcomposer.org) are required.
+Php 8.0+ and [composer](https://getcomposer.org) are required.
 
 ```bash
 $ composer require parable-php/parable
