@@ -182,6 +182,16 @@ added only serves to do setup as part of the `Config` flow, none of which is req
 - [parable-php/routing](https://github.com/parable-php/routing)
 - [parable-php/http](https://github.com/parable-php/http)
 
+## Thank youses
+
+I want to thank the following people for inspiring, challenging and brainstorming with me about ideas and how to make Parable the best
+framework I never found anywhere else:
+
+- [Dave van der Brugge](https://github.com/dmvdbrugge) for his almost insane eye for detail and asking 'why?' so often it made me cry once.
+- [Thijs Riezebeek](https://github.com/Thijs-Riezebeek) for being my braining sparring partner whether he wants to or not. Will never ever ever not challenge me on _every single decision ever_. Which is good!
+- [Jerry van Kooten](https://github.com/jerry1970) for always going well beyond the knowledge I'd expect him to have and testing my stuff out. Also for actually creating PRs when he hated something, improving a few packages massively.
+- [Lucas Grossi](https://github.com/lgrossi) for choosing to go with Parable's alpha version for an actual professional project, forcing me to release 2.0.0 because otherwise it'd never be approved.
+
 ## Contributing
 
 Any suggestions, bug reports or general feedback is welcome. Use github issues and pull requests, or find me over at [devvoh.com](https://devvoh.com).
