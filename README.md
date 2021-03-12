@@ -88,6 +88,8 @@ class ConfigPlugin implements PluginInterface
 
 To set up routing, just add a `RoutingPlugin` and place it either in `PLUGIN_BEFORE_BOOT` or `PLUGIN_AFTER_BOOT` depending on whether you need the session/database to be active first.
 
+For full information on `parable-php/routing`, read the [README.md](https://github.com/parable-php/routing) of that package.
+
 ```php
 class RoutingPlugin implements PluginInterface
 {
@@ -165,6 +167,20 @@ $this->router->add(
     },
 );
 ```
+
+## Packages used in `parable-php/framework`
+
+Check the below packages for any questions you might have about how to approach them. Their behavior is fully available to you
+as part of the framework and Parable 2.0 doesn't do anything special to stop you or wrap it in weird ways. Mostly what's been
+added only serves to do setup as part of the `Config` flow, none of which is required.
+
+- [parable-php/console](https://github.com/parable-php/console)
+- [parable-php/di](https://github.com/parable-php/di)
+- [parable-php/event](https://github.com/parable-php/event)
+- [parable-php/getset](https://github.com/parable-php/getset)
+- [parable-php/orm](https://github.com/parable-php/orm)
+- [parable-php/routing](https://github.com/parable-php/routing)
+- [parable-php/http](https://github.com/parable-php/http)
 
 ## Contributing
 
