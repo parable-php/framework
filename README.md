@@ -154,16 +154,16 @@ The `DataCollection` from `parable-php/getset` is specifically intended for free
 Note that you don't need either controllers OR templates! You can also just pass an anonymous function in, which can be perfect for small and simple REST APIs:
 
 ```php
-        $this->router->add(
-            ['GET'],
-            'api-index',
-            '/api',
-            function () {
-                echo json_encode([
-                    'status' => 'success',
-                ]);
-            },
-        );
+$this->router->add(
+    ['GET'],
+    'api-index',
+    '/api',
+    function () {
+        echo json_encode([
+            'status' => 'success',
+        ]);
+    },
+);
 ```
 
 ## Contributing
