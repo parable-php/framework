@@ -137,10 +137,10 @@ public function someAction() {
 And in the template, if you've added `@var \Parable\Framework\Http\Template $this` like I suggested you do? Easy!
 
 ```php
-echo 'Value is ' . $this->dataCollection->get('viewData.value');
+echo 'Value is ' . $this->data->get('viewData.value');
 ```
 
-The `DataCollection` from `parable-php/getset` is specifically intended for free-form data storing and sharing across files, so it's perfect for this!
+The `DataCollection` from `parable-php/getset` is specifically intended for free-form data storing and sharing across files, so it's perfect for this.
 
 Note that you don't need either controllers OR templates! You can also just pass an anonymous function in, which can be perfect for small and simple REST APIs:
 
@@ -149,7 +149,7 @@ $this->router->add(
     ['GET'],
     'api-index',
     '/api',
-    function () {
+    static function () {
         echo json_encode([
             'status' => 'success',
         ]);
