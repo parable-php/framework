@@ -1,5 +1,8 @@
+composer.phar:
+	./composer-install.sh
+
 dependencies:
-	composer install \
+	./composer.phar install \
 		--no-interaction \
 		--no-plugins \
 		--no-scripts

@@ -53,7 +53,7 @@ class InstallCommand extends Command
             $this->output->writeln(sprintf('  detected root namespace:     <cyan>%s</cyan>', $existingRootNamespace));
             $this->output->writeln(sprintf('  detected source namespace:   <cyan>%s</cyan>', $existingSourceDir));
 
-            $upgrading = $useExisting = $this->askUserToContinue(
+            $upgrading = $this->askUserToContinue(
                 'Do you want to use these? (No will revert to assuming fresh install)'
             );
 
@@ -163,11 +163,12 @@ class InstallCommand extends Command
             }
         }
 
-        if ($upgrading === false) {
-            if ($this->askUserToContinue(
+        if ($upgrading === false
+            && $this->askUserToContinue(
                 'Do you want to install the example files (Boot.php, ExamplePlugin.php, welcome.phtml)? (say no if you\'re upgrading)',
                 true
-            )) {
+            )
+        ) {
                 if (!$this->copyTemplateFile('Boot.php', $sourceDir, $namespace, $sourceDir, $publicDir)) {
                     return;
                 }
@@ -178,7 +179,6 @@ class InstallCommand extends Command
                     return;
                 }
             }
-        }
 
         if ($this->askUserToContinue('Do you want to install the (Apache 2.4+) .htaccess files? (say no if you\'ve made changes to these)')) {
             if (!$this->copyTemplateFile('.htaccess_root', null, $namespace, $sourceDir, $publicDir)) {
@@ -290,7 +290,7 @@ class InstallCommand extends Command
         string $sourceDir,
         string $publicDir
     ): ?string {
-        $structurePath = realpath(__DIR__ . DS . '..' . DS . '..' . DS . 'structure');
+        $structurePath = dirname(__DIR__ . DS . '..' . DS . '..' . DS . 'structure');
 
         $contents = @file_get_contents($structurePath . DS . $filename . '_template');
 
@@ -299,7 +299,7 @@ class InstallCommand extends Command
             return null;
         }
 
-        $contents = str_replace(
+        return str_replace(
             [
                 '###ROOT_NAMESPACE###',
                 '###SOURCE_DIRECTORY###',
@@ -312,7 +312,5 @@ class InstallCommand extends Command
             ],
             $contents
         );
-
-        return $contents;
     }
 }

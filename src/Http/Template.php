@@ -122,8 +122,12 @@ class Template
             $nameMatch = '$' . $name;
 
             if (str_contains($annotatedProperty, $nameMatch)) {
-                $matchedProperty = str_replace(' * @property-read ', '', $annotatedProperty);
-                $matchedProperty = str_replace($nameMatch, '', $matchedProperty);
+                $matchedProperty = str_replace(
+                    [' * @property-read ', $nameMatch],
+                    '',
+                    $annotatedProperty
+                );
+
                 break;
             }
         }

@@ -19,7 +19,7 @@ class RouteDispatcher
 
     public function __construct(
         protected Container $container,
-        protected Events $Events,
+        protected Events $events,
         protected Path $path,
         protected Response $response,
         protected Template $template
@@ -30,7 +30,7 @@ class RouteDispatcher
         try {
             $this->dispatchedRoute = $route;
 
-            $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_BEFORE, $route);
+            $this->events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_BEFORE, $route);
 
             $this->startOutputBuffer();
 
@@ -55,8 +55,8 @@ class RouteDispatcher
 
             $templatePath = $route->getMetadataValue('template');
 
-            if ($templatePath !== null && !empty($templatePath)) {
-                $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $templatePath);
+            if (!empty($templatePath)) {
+                $this->events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_BEFORE, $templatePath);
 
                 $this->startOutputBuffer();
 
@@ -65,10 +65,10 @@ class RouteDispatcher
 
                 $this->response->appendBody($this->getOutputBuffer());
 
-                $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $templatePath);
+                $this->events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_TEMPLATE_AFTER, $templatePath);
             }
 
-            $this->Events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_AFTER, $route);
+            $this->events->trigger(EventTriggers::ROUTE_DISPATCHER_DISPATCH_AFTER, $route);
         } catch (Throwable $e) {
             $this->undoAllOutputBuffers();
 

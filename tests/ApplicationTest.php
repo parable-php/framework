@@ -96,7 +96,7 @@ class ApplicationTest extends AbstractTestCase
     public function testApplicationCannotBeBootedTwice(): void
     {
         $this->expectException(FrameworkException::class);
-        $this->expectExceptionMessage("App has already booted.");
+        $this->expectExceptionMessage("Application has already booted.");
 
         $application = $this->container->build(Application::class);
 
@@ -319,7 +319,7 @@ class ApplicationTest extends AbstractTestCase
 
         self::assertSame('PHPSESSID', $this->triggeredEvents[EventTriggers::APPLICATION_SESSION_START_AFTER]);
 
-        $this->config->set('parable.session.name', 'session name');
+        $this->config->set('parable.session.name', 'session_name');
 
         $this->container->build(Application::class)->run();
 
@@ -328,7 +328,7 @@ class ApplicationTest extends AbstractTestCase
             array_keys($this->triggeredEvents)
         );
 
-        self::assertSame('session name', $this->triggeredEvents[EventTriggers::APPLICATION_SESSION_START_AFTER]);
+        self::assertSame('session_name', $this->triggeredEvents[EventTriggers::APPLICATION_SESSION_START_AFTER]);
 
         $this->getActualOutputAndClean();
     }

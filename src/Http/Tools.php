@@ -38,9 +38,11 @@ class Tools
             $this->get->set('PARABLE_REDIRECT_URL', $this->server->get('PATH_INFO') ?? '');
         }
 
-        return $this->get->get('PARABLE_REDIRECT_URL') !== null
-            ? $this->clean((string)$this->get->get('PARABLE_REDIRECT_URL'))
-            : '/';
+        if ($this->get->get('PARABLE_REDIRECT_URL') === null) {
+            return '/';
+        }
+
+        return $this->clean((string)$this->get->get('PARABLE_REDIRECT_URL'));
     }
 
     public function getCurrentUrl(): string

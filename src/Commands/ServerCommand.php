@@ -86,7 +86,7 @@ class ServerCommand extends Command
         );
 
         /** @psalm-suppress ForbiddenCode */
-        shell_exec(escapeshellcmd($fullCommand));
+        passthru($fullCommand, $result);
     }
 
     protected static function signalHandler(): void
