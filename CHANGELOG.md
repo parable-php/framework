@@ -1,5 +1,10 @@
 # Parable PHP Framework
 
+## 2.0.4
+
+_Changes_
+- Fix `parable` command and `InstallCommand`
+
 ## 2.0.3
 
 _Changes_

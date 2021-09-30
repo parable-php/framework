@@ -290,7 +290,7 @@ class InstallCommand extends Command
         string $sourceDir,
         string $publicDir
     ): ?string {
-        $structurePath = dirname(__DIR__ . DS . '..' . DS . '..' . DS . 'structure');
+        $structurePath = __DIR__ . DS . '..' . DS . '..' . DS . 'structure';
 
         $contents = @file_get_contents($structurePath . DS . $filename . '_template');
 
