@@ -1,5 +1,11 @@
 # Parable PHP Framework
 
+## 2.0.3
+
+_Changes_
+- Fixed `ServerCommand`
+- Code cleanup
+
 ## 2.0.2
 
 _Changes_
