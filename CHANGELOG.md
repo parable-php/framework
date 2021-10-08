@@ -1,5 +1,12 @@
 # Parable PHP Framework
 
+## 2.0.5
+
+Best update ever!
+
+_Changes_
+- Fix animation on welcome.phtml, it shouldn't have been animating `html {}`, made it all janky-looking 😂
+
 ## 2.0.4
 
 _Changes_

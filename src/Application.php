@@ -19,7 +19,7 @@ class Application
 {
     use BootableTrait;
 
-    public const VERSION = '2.0.3';
+    public const VERSION = '2.0.5';
 
     public const PLUGIN_BEFORE_BOOT = 'plugin_before_boot';
     public const PLUGIN_AFTER_BOOT = 'plugin_after_boot';

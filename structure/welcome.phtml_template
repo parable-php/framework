@@ -11,8 +11,6 @@
                 font-weight: 100;
                 font-size: 17px;
                 color: #fff;
-
-                animation: 1s fade-in forwards;
             }
             @keyframes fade-in {
                 from {opacity: 0;}
@@ -20,6 +18,9 @@
             }
             html, body {
                 margin: 0;
+            }
+            body {
+                animation: 1s fade-in forwards;
             }
             h2 {
                 font-weight: bold;
