@@ -12,7 +12,7 @@ Parable is a PHP framework with two goals: it's just enough, and it doesn't enfo
 Php 8.0+ and [composer](https://getcomposer.org) are required.
 
 ```bash
-$ composer require parable-php/parable
+$ composer require parable-php/framework
 ```
 
 And to set up parable, run the following and follow the interactive questions:
