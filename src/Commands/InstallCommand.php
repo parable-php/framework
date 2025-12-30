@@ -220,7 +220,7 @@ class InstallCommand extends Command
         return $continue;
     }
 
-    protected function askUserAQuestionWithDefault(string $question, string $default = null): ?string
+    protected function askUserAQuestionWithDefault(string $question, ?string $default = null): ?string
     {
         $this->output->write($question);
         if ($default !== null) {
